@@ -1,21 +1,14 @@
-import {
-  Box,
-  Button,
-  Center,
-  HStack,
-  Input,
-  VStack,
-  Text,
-  Image,
-  Icon,
-  Pressable
-} from 'native-base'
+import { Box, HStack, Input, Text, Image, Icon, Pressable } from 'native-base'
 import React from 'react'
 import ImageLogin from '../../assets/imageLogin.png'
+import { MaterialIcons } from '@expo/vector-icons'
 
 import { Heading } from 'native-base'
+import { TouchableOpacity } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 export default function SignIn() {
   const [show, setShow] = React.useState(false)
+  const navigation = useNavigation()
   return (
     <Box
       flex={1}
@@ -42,6 +35,17 @@ export default function SignIn() {
       <Heading size="xl" color="white" paddingBottom={'10px'}>
         Login
       </Heading>
+
+      <Input
+        color="muted.50"
+        size="md"
+        placeholder="e-mail"
+        marginBottom={'5%'}
+        borderColor="light.100"
+        borderWidth={'0.3'}
+        variant="unstyled"
+      />
+
       <Input
         type={show ? 'text' : 'password'}
         InputRightElement={
@@ -60,35 +64,31 @@ export default function SignIn() {
         size="md"
         borderColor="muted.200"
         borderWidth={'0.3'}
-        placeholder="e-mail"
+        placeholder="senha"
         autoCorrect={false}
         autoCapitalize="none"
         marginBottom={'5%'}
-        variant="unstyled"
-      />
-      <Input
-        color="muted.50"
-        size="md"
-        placeholder="senha"
-        secureTextEntry
-        marginBottom={'5%'}
-        borderColor="light.100"
-        borderWidth={'0.3'}
-        variant="unstyled"
       />
       <HStack marginBottom={'10px'} justifyContent={'space-between'}>
         <Text color="white">Cadastrar</Text>
         <Text color="white">Esqueci Senha</Text>
       </HStack>
-      <Button
-        size="lg"
-        borderRadius={'12px'}
-        bg={'red.500'}
-        maxH="56px"
-        minH="56px"
+
+      <TouchableOpacity
+        onPress={() => navigation.navigate('home')}
+        activeOpacity={0.4}
+        style={{
+          borderRadius: 12,
+          maxHeight: 50,
+          minHeight: 50,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: '#eb5360',
+          flex: 1
+        }}
       >
-        Entrar
-      </Button>
+        <Text color={'white'}> Entrar </Text>
+      </TouchableOpacity>
     </Box>
   )
 }
