@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import SignIn from '../screens/SignIn'
 import Home from '../screens/Home'
+import { UserTabRoutes } from './tabRoutes'
 
 const { Navigator, Screen, Group } = createNativeStackNavigator()
 
@@ -11,7 +12,7 @@ export function Routes() {
     <NavigationContainer>
       <Navigator screenOptions={{ headerShown: false }}>
         <Screen name="login" component={SignIn} />
-        <Screen name="home" component={Home} />
+        <Screen name="UserTabRoutes" component={UserTabRoutes} />
       </Navigator>
     </NavigationContainer>
   )

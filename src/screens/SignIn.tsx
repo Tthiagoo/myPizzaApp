@@ -32,7 +32,7 @@ export default function SignIn() {
         resizeMode="contain"
         alignSelf={'center'}
       />
-      <Heading size="xl" color="white" paddingBottom={'10px'}>
+      <Heading color="white" paddingBottom={'10px'}>
         Login
       </Heading>
 
@@ -75,7 +75,7 @@ export default function SignIn() {
       </HStack>
 
       <TouchableOpacity
-        onPress={() => navigation.navigate('home')}
+        onPress={() => navigation.navigate('UserTabRoutes')}
         activeOpacity={0.4}
         style={{
           borderRadius: 12,
