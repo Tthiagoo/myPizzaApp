@@ -21,8 +21,6 @@ export default function SignIn() {
       }}
       padding="8%"
       safeAreaTop
-      width={'100%'}
-      height="100%"
       justifyContent={'center'}
     >
       <Image
@@ -75,7 +73,7 @@ export default function SignIn() {
       </HStack>
 
       <TouchableOpacity
-        onPress={() => navigation.navigate('UserTabRoutes')}
+        onPress={() => navigation.navigate('home')}
         activeOpacity={0.4}
         style={{
           borderRadius: 12,

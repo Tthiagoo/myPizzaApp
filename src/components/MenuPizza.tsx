@@ -1,16 +1,20 @@
-import {
-  Avatar,
-  Box,
-  FlatList,
-  HStack,
-  Spacer,
-  VStack,
-  Text
-} from 'native-base'
+import { useNavigation } from '@react-navigation/native'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { FlatList } from 'native-base'
 import React from 'react'
 import ItemPizza from './ItemPizza'
+export type RootStackParamList = {
+  order: { id: string }
+}
 
 export default function MenuPizza() {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>()
+
+  function handleOpen(id: string) {
+    navigation.navigate('order', { id })
+    console.log(id)
+  }
   const data = [
     {
       id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
@@ -138,7 +142,9 @@ export default function MenuPizza() {
       paddingX={'5%'}
       marginTop={'10px'}
       data={data}
-      renderItem={({ item }) => <ItemPizza key={item.id} />}
+      renderItem={({ item }) => (
+        <ItemPizza key={item.id} onPress={() => handleOpen('1')} />
+      )}
       keyExtractor={item => item.id}
     />
   )

@@ -1,9 +1,21 @@
 import { Box, Heading, HStack, Image, VStack, Text, Divider } from 'native-base'
 import React from 'react'
 
-export default function ItemPizza() {
+import { TouchableOpacityProps, TouchableOpacity } from 'react-native'
+
+export type ProductProps = {
+  id: string
+  photo_url: string
+  name: string
+  description: string
+}
+type Props = TouchableOpacityProps & {
+  data?: ProductProps
+}
+
+export default function ItemPizza({ data, ...rest }: Props) {
   return (
-    <>
+    <TouchableOpacity {...rest}>
       <HStack fontFamily={'heading'}>
         <Image
           source={{
@@ -22,6 +34,6 @@ export default function ItemPizza() {
         </VStack>
       </HStack>
       <Divider my="4%" width={'65%'} alignSelf={'flex-end'} />
-    </>
+    </TouchableOpacity>
   )
 }
