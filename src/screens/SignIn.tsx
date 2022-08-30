@@ -35,6 +35,7 @@ export default function SignIn() {
       </Heading>
 
       <Input
+        placeholderTextColor={'white'}
         color="muted.50"
         size="md"
         placeholder="e-mail"
@@ -45,7 +46,9 @@ export default function SignIn() {
       />
 
       <Input
+        placeholderTextColor={'white'}
         type={show ? 'text' : 'password'}
+        variant="unstyled"
         InputRightElement={
           <Pressable onPress={() => setShow(!show)}>
             <Icon
