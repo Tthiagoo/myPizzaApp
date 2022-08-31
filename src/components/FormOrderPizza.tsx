@@ -75,7 +75,7 @@ export default function FormOrderPizza() {
           minHeight: 60,
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: 'green',
+          backgroundColor: '#528F33',
           flex: 1,
           marginTop: 14,
           padding: 10

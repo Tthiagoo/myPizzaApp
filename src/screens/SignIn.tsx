@@ -76,7 +76,7 @@ export default function SignIn() {
       </HStack>
 
       <TouchableOpacity
-        onPress={() => navigation.navigate('home')}
+        onPress={() => navigation.navigate('UserTabRoutes')}
         activeOpacity={0.4}
         style={{
           borderRadius: 12,

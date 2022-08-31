@@ -7,6 +7,9 @@ import Home from '../screens/Home'
 import SinfIn from '../screens/SignIn'
 //import { BottomMenu } from '../components/BottomMenu'
 import SignIn from '../screens/SignIn'
+import OrderHistory from '../screens/OrderHistory'
+import BottomMenu from '../components/BottomMenu'
+import Carrinho from '../screens/Carrinho'
 
 const { Navigator, Screen } = createBottomTabNavigator()
 
@@ -16,19 +19,40 @@ export function UserTabRoutes() {
   return (
     <Navigator
       screenOptions={{
-        // tabBarActiveTintColor: COLORS.SECONDARY_900,
-        //tabBarInactiveTintColor: COLORS.SECONDARY_400,
+        tabBarActiveTintColor: '#572D31',
+        tabBarInactiveTintColor: '#572d3134',
         headerShown: false,
         tabBarShowLabel: false,
         tabBarStyle: {
-          height: 80,
+          height: 60,
           paddingVertical: Platform.OS === 'ios' ? 20 : 0
         }
       }}
     >
-      <Screen name="home" component={Home} />
+      <Screen
+        name="home"
+        component={Home}
+        options={{
+          tabBarIcon: ({ color }) => <BottomMenu name="home" color={color} />
+        }}
+      />
 
-      <Screen name="orders" component={SignIn} />
+      <Screen
+        name="orders"
+        component={OrderHistory}
+        options={{
+          tabBarIcon: ({ color }) => <BottomMenu name="history" color={color} />
+        }}
+      />
+      <Screen
+        name="Cart"
+        component={Carrinho}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <BottomMenu name="shopping-cart" color={color} />
+          )
+        }}
+      />
     </Navigator>
   )
 }
