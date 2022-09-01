@@ -5,31 +5,33 @@ import { TouchableOpacityProps, TouchableOpacity } from 'react-native'
 
 export type ProductProps = {
   id: string
-  photo_url: string
-  name: string
+  image: string
+  title: string
   description: string
 }
 type Props = TouchableOpacityProps & {
-  data?: ProductProps
+  data: ProductProps
 }
 
 export default function ItemPizza({ data, ...rest }: Props) {
   return (
     <TouchableOpacity {...rest}>
-      <HStack fontFamily={'heading'}>
+      <HStack fontFamily={'heading'} h="auto">
         <Image
           source={{
-            uri: 'https://wallpaperaccess.com/full/317501.jpg'
+            uri: `${data.image}`
           }}
           alt="Alternate Text"
           size="lg"
           rounded="full"
           marginRight={6}
         />
-        <VStack justifyContent={'center'}>
-          <Heading size="sm">Pizza</Heading>
-          <Text lineHeight={'20px'} numberOfLines={3} fontSize={14} width="55%">
-            Mussarela, provolone, parmesão e gorgonzola
+        <VStack justifyContent={'center'} h="auto" maxW="60%">
+          <Heading size="sm" color="#572D31">
+            {data?.title}
+          </Heading>
+          <Text lineHeight={'20px'} numberOfLines={10} fontSize={14}>
+            {data.description}
           </Text>
         </VStack>
       </HStack>

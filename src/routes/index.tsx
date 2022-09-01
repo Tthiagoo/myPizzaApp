@@ -5,6 +5,7 @@ import SignIn from '../screens/SignIn'
 import Home from '../screens/Home'
 import { UserTabRoutes } from './tabRoutes'
 import PizzaOrder from '../screens/Order'
+import OrderDetail from '../screens/OrderDetail'
 
 const { Navigator, Screen, Group } = createNativeStackNavigator()
 
@@ -16,6 +17,7 @@ export function Routes() {
         <Screen name="UserTabRoutes" component={UserTabRoutes} />
         <Screen name="home" component={Home} />
         <Screen name="order" component={PizzaOrder} />
+        <Screen name="orderDetail" component={OrderDetail} />
       </Navigator>
     </NavigationContainer>
   )

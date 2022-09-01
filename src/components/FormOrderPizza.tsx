@@ -15,7 +15,7 @@ export default function FormOrderPizza() {
   return (
     <>
       <HStack w="100%" mt="3" space={6}>
-        <Flex flex="1">
+        <Flex w="25%">
           <FormControl.Label>
             <Text>Quantidade</Text>
           </FormControl.Label>
@@ -49,20 +49,19 @@ export default function FormOrderPizza() {
             fontSize={'md'}
             w="100%"
             _selectedItem={{
-              bg: 'teal.600',
-              endIcon: <CheckIcon size="5" />
+              bg: 'green.200'
             }}
             onValueChange={itemValue => setService(itemValue)}
           >
             <Select.Item label="Não" value="none" />
-            <Select.Item label="UX Research" value="ux" />
-            <Select.Item label="Web Development" value="web" />
+            <Select.Item label="Bauru + R$15" value="ux" />
+            <Select.Item label="Frango C/Queijo + R$15" value="web" />
 
-            <Select.Item label="UX Research" value="ux" />
+            <Select.Item label="Portuguesa + R$15" value="uxx" />
 
-            <Select.Item label="Cross Platform Development" value="cross" />
-            <Select.Item label="UI Designing" value="ui" />
-            <Select.Item label="Backend Development" value="backend" />
+            <Select.Item label="Calabresa + R$15" value="cross" />
+            <Select.Item label="Mussarela + R$15" value="ui" />
+            <Select.Item label="4 Queijos + R$15" value="backend" />
           </Select>
         </Flex>
       </HStack>

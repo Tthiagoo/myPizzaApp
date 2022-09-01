@@ -2,9 +2,10 @@ import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { FlatList } from 'native-base'
 import React from 'react'
-import ItemPizza from './ItemPizza'
+import ItemPizza, { ProductProps } from './ItemPizza'
 export type RootStackParamList = {
   order: { id: string }
+  orderDetail: { id: string }
 }
 
 export default function MenuPizza() {
@@ -14,54 +15,41 @@ export default function MenuPizza() {
   function handleOpen(id: string) {
     navigation.navigate('order', { id })
   }
-  const data = [
+  const data: ProductProps[] = [
     {
-      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-      fullName: 'Aafreen Khan',
-      timeStamp: '12:47 PM',
-      recentText: 'Good Day!',
-      avatarUrl:
-        'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
+      id: 'bd7acbea-c1b1-46cs2-aed5-3ad53abb28ba',
+      title: '4 Queijos',
+      description: 'Mussarela, provolone, parmesão e gorgonzola.',
+      image:
+        'https://static.clubedaanamariabraga.com.br/wp-content/uploads/2016/07/pizza-de-4-queijos.jpg?x41527'
     },
     {
-      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-      fullName: 'Sujitha Mathur',
-      timeStamp: '11:11 PM',
-      recentText: 'Cheer up, there!',
-      avatarUrl:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyEaZqT3fHeNrPGcnjLLX1v_W4mvBlgpwxnA&usqp=CAU'
+      id: 'bd7acbea-c1b1-46c2-aeddd5-3ad53abb28ba',
+      title: 'Margherita',
+      description: 'Mussarela, manjericão fresco,parmesão e tomate',
+      image:
+        'https://img.itdg.com.br/images/recipes/000/095/378/225012/225012_original.jpg'
     },
     {
-      id: '58694a0f-3da1-471f-bd96-145571e29d72',
-      fullName: 'Anci Barroco',
-      timeStamp: '6:22 PM',
-      recentText: 'Good Day!',
-      avatarUrl: 'https://miro.medium.com/max/1400/0*0fClPmIScV5pTLoE.jpg'
+      id: 'bd7acbea-c1b1-46c2-aeddd5-3ad5d3abb28ba',
+      title: 'Portuguesa',
+      description: 'Calabresa, ovo e pimentão cobertos com mussarela.',
+      image:
+        'https://img.itdg.com.br/tdg/images/recipes/000/000/324/323149/323149_original.jpg'
     },
     {
-      id: '68694a0f-3ddda1-431f-bd56-142371e29d72',
-      fullName: 'Aniket Kumar',
-      timeStamp: '8:56 PM',
-      recentText: 'All the best',
-      avatarUrl:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSr01zI37DYuR8bMV5exWQBSw28C1v_71CAh8d7GP1mplcmTgQA6Q66Oo--QedAN1B4E1k&usqp=CAU'
-    },
-
-    {
-      id: '68694a0f-3da1-4ddf31f-bd56-142371e29d72',
-      fullName: 'Aniket Kumar',
-      timeStamp: '8:56 PM',
-      recentText: 'All the best',
-      avatarUrl:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSr01zI37DYuR8bMV5exWQBSw28C1v_71CAh8d7GP1mplcmTgQA6Q66Oo--QedAN1B4E1k&usqp=CAU'
+      id: 'bd7acbea-c1b1-46c2-aedddssd5-3ad5d3abb28ba',
+      title: 'Bauru',
+      description: 'Mussarela, Presunto, Oregano, Tomate',
+      image:
+        'https://s2.glbimg.com/wMQRG2vmN_dDJ-1HrSwGOKEbZak=/0x0:1080x608/924x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_e84042ef78cb4708aeebdf1c68c6cbd6/internal_photos/bs/2021/e/n/G9IuruRaezxqgmwozOyg/capa-materia-gshow-49-.png'
     },
     {
-      id: '68694a0f-3da1-4gh31f-bd56-142371e29d72',
-      fullName: 'Aniket Kumar',
-      timeStamp: '8:56 PM',
-      recentText: 'All the best',
-      avatarUrl:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSr01zI37DYuR8bMV5exWQBSw28C1v_71CAh8d7GP1mplcmTgQA6Q66Oo--QedAN1B4E1k&usqp=CAU'
+      id: 'bd7acbea-c1ss  b1-46c2-aedddssd5-3ad5d3abb28ba',
+      title: 'Frango C/ Catupiry',
+      description: 'Frango desfiado, Catupiry e Oregano',
+      image:
+        'https://www.receiteria.com.br/wp-content/uploads/pizza-de-frango-de-liquidificador-00-730x449.jpg'
     }
   ]
   return (
@@ -70,7 +58,7 @@ export default function MenuPizza() {
       marginTop={'10px'}
       data={data}
       renderItem={({ item }) => (
-        <ItemPizza key={item.id} onPress={() => handleOpen('1')} />
+        <ItemPizza key={item.id} data={item} onPress={() => handleOpen('1')} />
       )}
       keyExtractor={item => item.id}
     />
