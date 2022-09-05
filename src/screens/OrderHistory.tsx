@@ -11,61 +11,43 @@ export interface OrderProps {
 export default function OrderHistory() {
   const orders: OrderProps[] = [
     {
-      id: '122344',
+      id: '12sdsd2344',
       pizza: 'test',
       image:
         'https://static.clubedaanamariabraga.com.br/wp-content/uploads/2020/08/pizza-margherita.jpg?x41527'
     },
     {
-      id: '12234444',
+      id: '1223sddd4444',
       pizza: 'test',
       image:
         'https://img.itdg.com.br/tdg/images/blog/uploads/2022/07/5-itens-necessarios-para-se-tornar-um-pizzaiolo-neste-Dia-da-Pizza.jpg?mode=crop&width={:width=%3E150,%20:height=%3E130'
     },
     {
-      id: '122344',
+      id: '122ss344',
       pizza: 'test',
       image:
         'https://img.itdg.com.br/tdg/images/blog/uploads/2022/07/5-itens-necessarios-para-se-tornar-um-pizzaiolo-neste-Dia-da-Pizza.jpg?mode=crop&width={:width=%3E150,%20:height=%3E130'
     },
     {
-      id: '122344',
+      id: '122dsdsds344',
       pizza: 'test',
       image:
         'https://img.itdg.com.br/tdg/images/blog/uploads/2022/07/5-itens-necessarios-para-se-tornar-um-pizzaiolo-neste-Dia-da-Pizza.jpg?mode=crop&width={:width=%3E150,%20:height=%3E130'
     },
     {
-      id: '122344',
+      id: '122wewewew344',
       pizza: 'test',
       image:
         'https://img.itdg.com.br/tdg/images/blog/uploads/2022/07/5-itens-necessarios-para-se-tornar-um-pizzaiolo-neste-Dia-da-Pizza.jpg?mode=crop&width={:width=%3E150,%20:height=%3E130'
     },
     {
-      id: '122344',
+      id: '122wewewewew344',
       pizza: 'test',
       image:
         'https://img.itdg.com.br/tdg/images/blog/uploads/2022/07/5-itens-necessarios-para-se-tornar-um-pizzaiolo-neste-Dia-da-Pizza.jpg?mode=crop&width={:width=%3E150,%20:height=%3E130'
     },
     {
-      id: '122344',
-      pizza: 'test',
-      image:
-        'https://img.itdg.com.br/tdg/images/blog/uploads/2022/07/5-itens-necessarios-para-se-tornar-um-pizzaiolo-neste-Dia-da-Pizza.jpg?mode=crop&width={:width=%3E150,%20:height=%3E130'
-    },
-    {
-      id: '122344',
-      pizza: 'test',
-      image:
-        'https://img.itdg.com.br/tdg/images/blog/uploads/2022/07/5-itens-necessarios-para-se-tornar-um-pizzaiolo-neste-Dia-da-Pizza.jpg?mode=crop&width={:width=%3E150,%20:height=%3E130'
-    },
-    {
-      id: '122344',
-      pizza: 'test',
-      image:
-        'https://img.itdg.com.br/tdg/images/blog/uploads/2022/07/5-itens-necessarios-para-se-tornar-um-pizzaiolo-neste-Dia-da-Pizza.jpg?mode=crop&width={:width=%3E150,%20:height=%3E130'
-    },
-    {
-      id: '122344',
+      id: '12ewewewew2344',
       pizza: 'test',
       image:
         'https://img.itdg.com.br/tdg/images/blog/uploads/2022/07/5-itens-necessarios-para-se-tornar-um-pizzaiolo-neste-Dia-da-Pizza.jpg?mode=crop&width={:width=%3E150,%20:height=%3E130'

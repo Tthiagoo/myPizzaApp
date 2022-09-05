@@ -1,14 +1,33 @@
 import { Box, HStack, Input, Text, Image, Icon, Pressable } from 'native-base'
-import React from 'react'
+import React, { useState } from 'react'
 import ImageLogin from '../../assets/imageLogin.png'
 import { MaterialIcons } from '@expo/vector-icons'
 
 import { Heading } from 'native-base'
 import { TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+import { useAuth } from '../context/auth'
 export default function SignIn() {
   const [show, setShow] = React.useState(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
   const navigation = useNavigation()
+
+  const { signIn, user } = useAuth()
+
+  function handleSignIn() {
+    signIn(email, password)
+      .then(() => {
+        console.log(user)
+        navigation.navigate('home')
+        // ...
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
+
   return (
     <Box
       flex={1}
@@ -43,6 +62,7 @@ export default function SignIn() {
         borderColor="light.100"
         borderWidth={'0.3'}
         variant="unstyled"
+        onChangeText={setEmail}
       />
 
       <Input
@@ -69,6 +89,7 @@ export default function SignIn() {
         autoCorrect={false}
         autoCapitalize="none"
         marginBottom={'5%'}
+        onChangeText={setPassword}
       />
       <HStack marginBottom={'10px'} justifyContent={'space-between'}>
         <Text color="white">Cadastrar</Text>
@@ -76,7 +97,7 @@ export default function SignIn() {
       </HStack>
 
       <TouchableOpacity
-        onPress={() => navigation.navigate('UserTabRoutes')}
+        onPress={handleSignIn}
         activeOpacity={0.4}
         style={{
           borderRadius: 12,

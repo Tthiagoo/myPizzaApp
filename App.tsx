@@ -12,6 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
 import { theme } from './src/theme/customTheme'
 import { Loading } from './src/components/Loading'
+import { AuthProvider } from './src/context/auth'
 
 const config = {
   dependencies: {
@@ -37,17 +38,10 @@ export default function App() {
   }, [])*/
   return (
     <NativeBaseProvider config={config} theme={theme}>
-      <StatusBar style="light" translucent backgroundColor="transparent" />
-      {fontsLoaded ? <Routes /> : <Loading />}
+      <AuthProvider>
+        <StatusBar style="light" translucent backgroundColor="transparent" />
+        {fontsLoaded ? <Routes /> : <Loading />}
+      </AuthProvider>
     </NativeBaseProvider>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
-})
