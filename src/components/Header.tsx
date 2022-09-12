@@ -2,8 +2,11 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { Box, Heading, Icon } from 'native-base'
 import React from 'react'
 import { TouchableOpacity } from 'react-native'
+import { useAuth } from '../context/auth'
 
 export default function Header() {
+  const { signOutAuth } = useAuth()
+
   return (
     <Box
       bg={'red.700'}
@@ -20,7 +23,7 @@ export default function Header() {
         <Heading size={'md'} color="white">
           Olá, Cliente
         </Heading>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={signOutAuth}>
           <Icon as={MaterialIcons} name="logout" color="white" size={'lg'} />
         </TouchableOpacity>
       </Box>

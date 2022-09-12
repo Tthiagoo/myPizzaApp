@@ -6,18 +6,21 @@ import Home from '../screens/Home'
 import { UserTabRoutes } from './tabRoutes'
 import PizzaOrder from '../screens/Order'
 import OrderDetail from '../screens/OrderDetail'
+import { useAuth } from '../context/auth'
+import { UserStackRoutes } from './stackRoutes'
 
 const { Navigator, Screen, Group } = createNativeStackNavigator()
 
 export function Routes() {
+  const { user } = useAuth()
   return (
     <NavigationContainer>
       <Navigator screenOptions={{ headerShown: false }}>
-        <Screen name="login" component={SignIn} />
-        <Screen name="UserTabRoutes" component={UserTabRoutes} />
-        <Screen name="home" component={Home} />
-        <Screen name="order" component={PizzaOrder} />
-        <Screen name="orderDetail" component={OrderDetail} />
+        {user ? (
+          <Screen name="Stack" component={UserStackRoutes} />
+        ) : (
+          <Screen name="login" component={SignIn} />
+        )}
       </Navigator>
     </NavigationContainer>
   )

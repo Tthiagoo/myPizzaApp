@@ -1,5 +1,14 @@
-import { Box, HStack, Input, Text, Image, Icon, Pressable } from 'native-base'
-import React, { useState } from 'react'
+import {
+  Box,
+  HStack,
+  Input,
+  Text,
+  Image,
+  Icon,
+  Pressable,
+  Button
+} from 'native-base'
+import React, { useEffect, useState } from 'react'
 import ImageLogin from '../../assets/imageLogin.png'
 import { MaterialIcons } from '@expo/vector-icons'
 
@@ -7,6 +16,7 @@ import { Heading } from 'native-base'
 import { TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { useAuth } from '../context/auth'
+import AlertStatus from '../components/StatusAlert'
 export default function SignIn() {
   const [show, setShow] = React.useState(false)
   const [email, setEmail] = useState('')
@@ -14,19 +24,20 @@ export default function SignIn() {
 
   const navigation = useNavigation()
 
-  const { signIn, user } = useAuth()
+  const { signIn, user, isLogging, loadUserStorageData } = useAuth()
 
   function handleSignIn() {
     signIn(email, password)
       .then(() => {
-        console.log(user)
-        navigation.navigate('home')
-        // ...
+        //// ...
       })
       .catch(error => {
         console.log(error)
       })
   }
+  useEffect(() => {
+    loadUserStorageData()
+  }, [])
 
   return (
     <Box
@@ -96,9 +107,10 @@ export default function SignIn() {
         <Text color="white">Esqueci Senha</Text>
       </HStack>
 
-      <TouchableOpacity
+      <Button
         onPress={handleSignIn}
-        activeOpacity={0.4}
+        isLoading={isLogging}
+        _pressed={{ opacity: 0.6 }}
         style={{
           borderRadius: 12,
           maxHeight: 50,
@@ -110,7 +122,7 @@ export default function SignIn() {
         }}
       >
         <Text color={'white'}> Entrar </Text>
-      </TouchableOpacity>
+      </Button>
     </Box>
   )
 }
