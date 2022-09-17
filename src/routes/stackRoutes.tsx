@@ -20,6 +20,8 @@ export function UserStackRoutes() {
         <Group>
           <Screen name="home" component={Home} />
           <Screen name="RegisterPizza" component={RegisterPizza} />
+
+          <Screen name="order" component={PizzaOrder} />
         </Group>
       ) : (
         <Group>
