@@ -7,6 +7,7 @@ import Order from '../screens/Order'
 import { UserTabRoutes } from './tabRoutes'
 import PizzaOrder from '../screens/Order'
 import OrderDetail from '../screens/OrderDetail'
+import RegisterPizza from '../screens/RegisterPizza'
 
 const { Navigator, Screen, Group } = createNativeStackNavigator()
 
@@ -18,6 +19,7 @@ export function UserStackRoutes() {
       {user?.isAdmin ? (
         <Group>
           <Screen name="home" component={Home} />
+          <Screen name="RegisterPizza" component={RegisterPizza} />
         </Group>
       ) : (
         <Group>
