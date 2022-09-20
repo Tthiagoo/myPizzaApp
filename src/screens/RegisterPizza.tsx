@@ -1,4 +1,6 @@
+import { useNavigation } from '@react-navigation/native'
 import {
+  ArrowBackIcon,
   Box,
   Button,
   Flex,
@@ -6,33 +8,44 @@ import {
   Heading,
   HStack,
   Input,
+  KeyboardAvoidingView,
   ScrollView,
   Stack,
   Text,
   TextArea
 } from 'native-base'
 import React from 'react'
+import { Platform } from 'react-native'
+import { InputPrice } from '../components/itemPrice'
 
 export default function RegisterPizza() {
+  const navigation = useNavigation()
+
+  function handleGoBack() {
+    navigation.goBack()
+  }
   return (
-    <Flex flex="1" bg="light.200" alignItems={'center'}>
-      <ScrollView p="0">
-        <Flex
-          safeAreaTop
-          w="100%"
-          h="15%"
-          bg="red.700"
-          alignItems={'center'}
-          justifyContent="center"
-          color="white"
-        >
-          <Heading size="md" color="white">
-            Cadastrar Pizza
-          </Heading>
-        </Flex>
-        <HStack mt="8" space={7} borderColor="red.500" borderWidth={'1'}>
+    <KeyboardAvoidingView
+      flex="1"
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <Flex
+        safeAreaTop
+        w="100%"
+        h="15%"
+        bg="red.700"
+        alignItems={'center'}
+        justifyContent="center"
+        color="white"
+      >
+        <Heading size="md" color="white">
+          Cadastrar Pizza
+        </Heading>
+      </Flex>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <HStack mt="8" space={7} justifyContent={'center'}>
           <Flex
-            borderColor={'blue.500'}
+            borderColor={'black'}
             h="160px"
             w="160px"
             borderRadius={'full'}
@@ -88,69 +101,14 @@ export default function RegisterPizza() {
             </Stack>
           </Stack>
 
-          <Stack px="5" space={2}>
+          <Stack px="5" space={2} paddingBottom={3}>
             <Text>Tamanhos e Preços</Text>
-            <HStack>
-              <Flex
-                borderWidth={1}
-                borderColor="gray.300"
-                justifyContent="center"
-                alignItems={'center'}
-                px={4}
-                bgColor="white"
-              >
-                P
-              </Flex>
-              <Input
-                h="100%"
-                borderBottomLeftRadius={'0px'}
-                borderTopLeftRadius={'0px'}
-                borderLeftColor="none"
-                borderLeftStyle={'none'}
-                borderBottomRightRadius={'10px'}
-                borderTopRightRadius={'10px'}
-                bg="white"
-                variant={'unstyled'}
-                borderColor="gray.300"
-                borderWidth={'1'}
-                p="0.9rem"
-                fontSize={'md'}
-                w="80%"
-                _focus={{ backgroundColor: '#fff', borderColor: 'white' }}
-              />
-            </HStack>
-            <HStack>
-              <Flex
-                borderWidth={1}
-                borderColor="gray.300"
-                justifyContent="center"
-                alignItems={'center'}
-                px={4}
-                bgColor="white"
-              >
-                P
-              </Flex>
-              <Input
-                h="100%"
-                borderBottomLeftRadius={'0px'}
-                borderTopLeftRadius={'0px'}
-                borderLeftColor="none"
-                borderLeftStyle={'none'}
-                borderBottomRightRadius={'10px'}
-                borderTopRightRadius={'10px'}
-                bg="white"
-                variant={'unstyled'}
-                borderColor="gray.300"
-                borderWidth={'1'}
-                p="0.9rem"
-                fontSize={'md'}
-                w="80%"
-                _focus={{ backgroundColor: '#fff', borderColor: 'white' }}
-              />
-            </HStack>
+            <InputPrice size="P" />
+            <InputPrice size="M" />
+            <InputPrice size="G" />
           </Stack>
         </FormControl>
       </ScrollView>
-    </Flex>
+    </KeyboardAvoidingView>
   )
 }

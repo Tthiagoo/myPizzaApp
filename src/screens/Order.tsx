@@ -1,23 +1,12 @@
 import { useNavigation } from '@react-navigation/native'
 import {
-  Box,
-  CheckIcon,
   ArrowBackIcon,
-  Circle,
   Image,
   Flex,
   Heading,
-  HStack,
-  VStack,
-  Text,
-  Radio,
   FormControl,
-  Input,
-  WarningOutlineIcon,
   KeyboardAvoidingView,
-  ScrollView,
-  Select,
-  Button
+  ScrollView
 } from 'native-base'
 
 import React, { useState } from 'react'
