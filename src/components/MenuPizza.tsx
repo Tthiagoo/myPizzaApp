@@ -12,8 +12,8 @@ export default function MenuPizza() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
 
-  function handleOpen(id: string) {
-    navigation.navigate('order', { id })
+  function handleOpen(item: ProductProps) {
+    navigation.navigate('order', item)
   }
   const data: ProductProps[] = [
     {
@@ -58,7 +58,7 @@ export default function MenuPizza() {
       marginTop={'10px'}
       data={data}
       renderItem={({ item }) => (
-        <ItemPizza key={item.id} data={item} onPress={() => handleOpen('1')} />
+        <ItemPizza key={item.id} data={item} onPress={() => handleOpen(item)} />
       )}
       keyExtractor={item => item.id}
     />

@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/native'
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import {
   ArrowBackIcon,
   Image,
@@ -13,7 +13,24 @@ import React, { useState } from 'react'
 import { Platform, TouchableOpacity } from 'react-native'
 import FormOrderPizza from '../components/FormOrderPizza'
 import RadioRow from '../components/RadioRow'
+
+interface PizzaOrderProps {
+  img: string
+  title: string
+  description: string
+}
+
+export type RootStackParamList = {
+  order: PizzaOrderProps
+}
+
+export type RootRouteProps<RouteName extends keyof RootStackParamList> =
+  RouteProp<RootStackParamList, RouteName>
+
 export default function PizzaOrder() {
+  const route = useRoute<RouteProp<RootStackParamList, 'order'>>()
+  const { ...rest } = route.params
+  console.log(rest)
   const navigation = useNavigation()
 
   function handleGoBack() {
