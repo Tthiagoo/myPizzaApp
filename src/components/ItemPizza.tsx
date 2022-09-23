@@ -1,11 +1,15 @@
 import { Box, Heading, HStack, Image, VStack, Text, Divider } from 'native-base'
 import React from 'react'
 
-import { TouchableOpacityProps, TouchableOpacity } from 'react-native'
+import {
+  TouchableOpacityProps,
+  TouchableOpacity,
+  ImageSourcePropType
+} from 'react-native'
 
 export type ProductProps = {
   id: string
-  image: string
+  image: ImageSourcePropType
   title: string
   description: string
 }

@@ -54,14 +54,14 @@ export default function FormOrderPizza() {
             onValueChange={itemValue => setService(itemValue)}
           >
             <Select.Item label="Não" value="none" />
-            <Select.Item label="Bauru + R$15" value="ux" />
-            <Select.Item label="Frango C/Queijo + R$15" value="web" />
+            <Select.Item label="Bauru = R$45" value="ux" />
+            <Select.Item label="Frango C/Queijo = R$45" value="web" />
 
-            <Select.Item label="Portuguesa + R$15" value="uxx" />
+            <Select.Item label="Portuguesa = R$45" value="uxx" />
 
-            <Select.Item label="Calabresa + R$15" value="cross" />
-            <Select.Item label="Mussarela + R$15" value="ui" />
-            <Select.Item label="4 Queijos + R$15" value="backend" />
+            <Select.Item label="Calabresa = R$45" value="cross" />
+            <Select.Item label="Mussarela = R$45" value="ui" />
+            <Select.Item label="4 Queijos = R$45" value="backend" />
           </Select>
         </Flex>
       </HStack>

@@ -1,4 +1,4 @@
-import { HStack, VStack, Radio, Text } from 'native-base'
+import { HStack, VStack, Radio, Text, Pressable } from 'native-base'
 import React, { useState } from 'react'
 
 export default function RadioRow() {
@@ -16,55 +16,60 @@ export default function RadioRow() {
         }}
       >
         <HStack w="100%" mt="4%" space={4} justifyContent="space-between">
-          <VStack
+          <Pressable
+            display={'flex'}
+            flexDirection="column"
             bgColor={value == '1' ? 'green.50' : 'white'}
             flex="1"
-            padding={'10px'}
+            p={'10px'}
             justifyContent={'center'}
             alignItems="center"
-            borderRadius={'10px'}
             borderWidth={1}
+            borderRadius={'10px'}
             borderColor={value == '1' ? 'green.500' : 'gray.300'}
+            onPress={() => {
+              setValue('1')
+            }}
           >
-            <Radio
-              value="1"
-              my={1}
-              colorScheme="green"
-              accessibilityLabel="Radio"
-            />
+            <Radio value="1" colorScheme="green" accessibilityLabel="Radio" />
             <Text fontWeight={'bold'}>Pequena</Text>
-          </VStack>
-
-          <VStack
-            bg="white"
+          </Pressable>
+          <Pressable
+            display={'flex'}
+            flexDirection="column"
+            bgColor={value == '2' ? 'green.50' : 'white'}
             flex="1"
+            p={'10px'}
             justifyContent={'center'}
             alignItems="center"
+            borderWidth={1}
             borderRadius={'10px'}
+            borderColor={value == '2' ? 'green.500' : 'gray.300'}
+            onPress={() => {
+              setValue('2')
+            }}
           >
-            <Radio
-              value="2"
-              my={1}
-              colorScheme="green"
-              accessibilityLabel="Radio"
-            />
-            <Text fontWeight={'bold'}>Media</Text>
-          </VStack>
-          <VStack
-            bg="white"
+            <Radio value="2" colorScheme="green" accessibilityLabel="Radio" />
+            <Text fontWeight={'bold'}>Medio</Text>
+          </Pressable>
+          <Pressable
+            display={'flex'}
+            flexDirection="column"
+            bgColor={value == '3' ? 'green.50' : 'white'}
             flex="1"
+            p={'10px'}
             justifyContent={'center'}
             alignItems="center"
+            borderWidth={1}
             borderRadius={'10px'}
+            borderColor={value == '3' ? 'green.500' : 'gray.300'}
+            onPress={() => {
+              setValue('3')
+            }}
           >
-            <Radio
-              value="3"
-              my={1}
-              colorScheme="green"
-              accessibilityLabel="Radio"
-            />
+            <Radio value="3" colorScheme="green" accessibilityLabel="Radio" />
             <Text fontWeight={'bold'}>Grande</Text>
-          </VStack>
+          </Pressable>
         </HStack>
       </Radio.Group>
     </>

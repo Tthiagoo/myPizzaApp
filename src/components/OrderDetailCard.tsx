@@ -19,6 +19,7 @@ export default function OrderDetailCard({ index, data, ...rest }: Props) {
       <VStack w="60%" space={1}>
         <Heading size="sm">{data.title}</Heading>
         <Text color="gray.500">{data.description}</Text>
+
         <Text fontWeight={'bold'}>{data.price}</Text>
       </VStack>
       <Image
