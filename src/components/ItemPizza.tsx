@@ -9,7 +9,7 @@ import {
 
 export type ProductProps = {
   id: string
-  image: ImageSourcePropType
+  image: string
   title: string
   description: string
 }

@@ -30,7 +30,7 @@ export type RootRouteProps<RouteName extends keyof RootStackParamList> =
 
 export default function PizzaOrder() {
   const route = useRoute<RouteProp<RootStackParamList, 'order'>>()
-  const { image, title, description } = route.params
+  const { id, image, title } = route.params
 
   const navigation = useNavigation()
 

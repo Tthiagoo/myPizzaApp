@@ -13,6 +13,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { theme } from './src/theme/customTheme'
 import { Loading } from './src/components/Loading'
 import { AuthProvider } from './src/context/auth'
+import { CartProvider } from './src/context/cartContext'
 
 const config = {
   dependencies: {
@@ -39,8 +40,10 @@ export default function App() {
   return (
     <NativeBaseProvider config={config} theme={theme}>
       <AuthProvider>
-        <StatusBar style="light" translucent backgroundColor="transparent" />
-        {fontsLoaded ? <Routes /> : <Loading />}
+        <CartProvider>
+          <StatusBar style="light" translucent backgroundColor="transparent" />
+          {fontsLoaded ? <Routes /> : <Loading />}
+        </CartProvider>
       </AuthProvider>
     </NativeBaseProvider>
   )

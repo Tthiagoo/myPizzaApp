@@ -2,10 +2,17 @@ import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { FlatList } from 'native-base'
 import React from 'react'
-import ItemPizza, { ProductProps } from './ItemPizza'
-export type RootStackParamList = {
+import ItemPizza from './ItemPizza'
+type RootStackParamList = {
   order: { id: string }
   orderDetail: { id: string }
+}
+
+interface ProductProps {
+  id: string
+  image: string
+  title: string
+  description: string
 }
 
 export default function MenuPizza() {

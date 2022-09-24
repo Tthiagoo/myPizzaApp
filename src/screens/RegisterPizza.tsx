@@ -1,5 +1,7 @@
 import { useNavigation } from '@react-navigation/native'
+import * as ImagePicker from 'expo-image-picker'
 import {
+  Image,
   ArrowBackIcon,
   Box,
   Button,
@@ -14,12 +16,28 @@ import {
   Text,
   TextArea
 } from 'native-base'
-import React from 'react'
+import React, { useState } from 'react'
 import { Platform } from 'react-native'
 import { InputPrice } from '../components/itemPrice'
 
 export default function RegisterPizza() {
   const navigation = useNavigation()
+  const [image, setImage] = useState('')
+
+  async function handlePickerImage() {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
+
+    if (status === 'granted') {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        aspect: [4, 4]
+      })
+
+      if (!result.cancelled) {
+        setImage(result.uri)
+      }
+    }
+  }
 
   function handleGoBack() {
     navigation.goBack()
@@ -49,12 +67,24 @@ export default function RegisterPizza() {
             h="160px"
             w="160px"
             borderRadius={'full'}
-            borderWidth="1"
+            borderStyle={'dashed'}
+            borderWidth={image ? '0' : '1'}
             alignItems={'center'}
             justifyContent="center"
             textAlign={'center'}
           >
-            <Text textAlign={'center'}>Nenhuma foto carregada</Text>
+            {image ? (
+              <Image
+                alt="pizza"
+                w="100%"
+                h="100%"
+                rounded={'full'}
+                source={{ uri: image }}
+                alignSelf="center"
+              />
+            ) : (
+              <Text textAlign={'center'}>Nenhuma foto carregada</Text>
+            )}
           </Flex>
           <Button
             bg={'red.700'}
@@ -64,6 +94,7 @@ export default function RegisterPizza() {
             h="35%"
             borderRadius="10"
             _pressed={{ bg: 'red.700', opacity: 0.6 }}
+            onPress={handlePickerImage}
           >
             Carregar
           </Button>
