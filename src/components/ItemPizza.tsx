@@ -12,6 +12,7 @@ export type ProductProps = {
   image: string
   title: string
   description: string
+  isAdd?: boolean
 }
 type Props = TouchableOpacityProps & {
   data: ProductProps

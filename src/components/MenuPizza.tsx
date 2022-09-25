@@ -2,10 +2,12 @@ import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { FlatList } from 'native-base'
 import React from 'react'
+import { useAuth } from '../context/auth'
 import ItemPizza from './ItemPizza'
 type RootStackParamList = {
   order: { id: string }
   orderDetail: { id: string }
+  RegisterPizza: { isAdd: boolean }
 }
 
 interface ProductProps {
@@ -13,14 +15,17 @@ interface ProductProps {
   image: string
   title: string
   description: string
+  isAdd?: boolean
 }
 
 export default function MenuPizza() {
+  const { user } = useAuth()
+  console.log(user?.isAdmin ? 'é admin' : 'nao é')
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
 
   function handleOpen(item: ProductProps) {
-    navigation.navigate('order', item)
+    navigation.navigate(user?.isAdmin ? 'RegisterPizza' : 'order', item)
   }
   const data: ProductProps[] = [
     {

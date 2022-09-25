@@ -23,6 +23,7 @@ interface PizzaOrderProps {
 
 export type RootStackParamList = {
   order: ProductProps
+  RegisterPizza: { isAdd: boolean; PizzaProps: ProductProps }
 }
 
 export type RootRouteProps<RouteName extends keyof RootStackParamList> =

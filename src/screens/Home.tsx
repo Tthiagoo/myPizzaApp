@@ -7,13 +7,19 @@ import Header from '../components/Header'
 import HeaderListPizza from '../components/HeaderListPizza'
 import MenuPizza from '../components/MenuPizza'
 import { useAuth } from '../context/auth'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 
 export default function Home() {
+  type RootStackParamList = {
+    RegisterPizza: { isAdd: boolean }
+  }
   const { user } = useAuth()
+
   console.log(user?.isAdmin ? 'é admin' : 'nao é')
-  const navigation = useNavigation()
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>()
   function handleNavigation() {
-    navigation.navigate('RegisterPizza')
+    navigation.navigate('RegisterPizza', { isAdd: true })
   }
 
   return (
