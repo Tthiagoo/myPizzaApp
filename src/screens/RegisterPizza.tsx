@@ -24,11 +24,20 @@ import { RootStackParamList } from './Order'
 export default function RegisterPizza() {
   const navigation = useNavigation()
   const route = useRoute<RouteProp<RootStackParamList, 'order'>>()
-  const { id, image: imageRoute, title, description, isAdd } = route.params
+
+  const {
+    id,
+    image: imageRoute,
+    title,
+    description: detalhes,
+    isAdd
+  } = route.params
 
   const [image, setImage] = useState('')
+  const [name, setName] = useState('')
+  const [description, setDescription] = useState('')
   const [imageParamsRoute, setImageParamsRoute] = useState('')
-
+  console.log(image)
   async function handlePickerImage() {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
 
@@ -46,7 +55,11 @@ export default function RegisterPizza() {
 
   function setParamsRoute() {
     if (id) {
+      console.log('foi')
+      console.log(title)
       setImage(imageRoute)
+      setName(title)
+      setDescription(detalhes)
     }
   }
 
@@ -56,7 +69,7 @@ export default function RegisterPizza() {
 
   useEffect(() => {
     setParamsRoute()
-  }, [])
+  }, [id])
   return (
     <KeyboardAvoidingView
       flex="1"
@@ -90,9 +103,9 @@ export default function RegisterPizza() {
           >
             {image ? (
               <Image
-                alt="pizza"
                 w="100%"
                 h="100%"
+                alt="pizza"
                 rounded={'full'}
                 source={{ uri: image }}
                 alignSelf="center"
@@ -122,10 +135,13 @@ export default function RegisterPizza() {
               <Input
                 borderRadius={'10px'}
                 bg="white"
+                type={'text'}
                 variant={'unstyled'}
                 borderColor="gray.300"
                 borderWidth={'1'}
                 p="0.9rem"
+                value={name}
+                onChangeText={setName}
                 fontSize={'md'}
                 w="100%"
                 _focus={{ backgroundColor: '#fff', borderColor: 'white' }}
@@ -138,6 +154,8 @@ export default function RegisterPizza() {
                 fontSize={'md'}
                 borderRadius={'10px'}
                 w="100%"
+                value={description}
+                onChangeText={setDescription}
                 autoCompleteType={undefined}
                 borderColor="gray.300"
                 variant={'unstyled'}
