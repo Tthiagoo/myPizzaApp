@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/native'
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import * as ImagePicker from 'expo-image-picker'
 import {
   Image,
@@ -16,13 +16,18 @@ import {
   Text,
   TextArea
 } from 'native-base'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Platform } from 'react-native'
 import { InputPrice } from '../components/itemPrice'
+import { RootStackParamList } from './Order'
 
 export default function RegisterPizza() {
   const navigation = useNavigation()
+  const route = useRoute<RouteProp<RootStackParamList, 'order'>>()
+  const { id, image: imageRoute, title, description, isAdd } = route.params
+
   const [image, setImage] = useState('')
+  const [imageParamsRoute, setImageParamsRoute] = useState('')
 
   async function handlePickerImage() {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
@@ -39,9 +44,19 @@ export default function RegisterPizza() {
     }
   }
 
+  function setParamsRoute() {
+    if (id) {
+      setImage(imageRoute)
+    }
+  }
+
   function handleGoBack() {
     navigation.goBack()
   }
+
+  useEffect(() => {
+    setParamsRoute()
+  }, [])
   return (
     <KeyboardAvoidingView
       flex="1"
