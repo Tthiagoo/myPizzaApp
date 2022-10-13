@@ -13,8 +13,7 @@ import ImageLogin from '../../assets/imageLogin.png'
 import { MaterialIcons } from '@expo/vector-icons'
 
 import { Heading } from 'native-base'
-import { TouchableOpacity } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
+
 import { useAuth } from '../context/auth'
 import AlertStatus from '../components/StatusAlert'
 export default function SignIn() {
@@ -22,15 +21,11 @@ export default function SignIn() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const navigation = useNavigation()
-
   const { signIn, user, isLogging, loadUserStorageData } = useAuth()
 
   function handleSignIn() {
     signIn(email, password)
-      .then(() => {
-        //// ...
-      })
+      .then(() => {})
       .catch(error => {
         console.log(error)
       })

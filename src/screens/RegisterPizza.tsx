@@ -1,5 +1,6 @@
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import * as ImagePicker from 'expo-image-picker'
+import { db, storage } from '../config/firebase'
 import {
   Image,
   ArrowBackIcon,
@@ -16,10 +17,31 @@ import {
   Text,
   TextArea
 } from 'native-base'
+
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  query,
+  setDoc,
+  where
+} from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
-import { Platform } from 'react-native'
+import { Alert, Platform } from 'react-native'
 import { InputPrice } from '../components/itemPrice'
+import { ProductProps } from '../types/product'
 import { RootStackParamList } from './Order'
+import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage'
+
+type PizzaResponse = ProductProps & {
+  photo_path: string
+  prices_sizes: {
+    p: string
+    m: string
+    g: string
+  }
+}
 
 export default function RegisterPizza() {
   const navigation = useNavigation()
@@ -34,9 +56,16 @@ export default function RegisterPizza() {
   } = route.params
 
   const [image, setImage] = useState('')
+  const [imgUrl, setImgUrl] = useState(null)
+  const [progresspercent, setProgresspercent] = useState(0)
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
-  const [imageParamsRoute, setImageParamsRoute] = useState('')
+  const [priceSizeP, setPriceSizeP] = useState('')
+  const [priceSizeM, setPriceSizeM] = useState('')
+  const [priceSizeG, setPriceSizeG] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [photoPath, setPhotoPath] = useState('')
+
   console.log(image)
   async function handlePickerImage() {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
@@ -70,6 +99,62 @@ export default function RegisterPizza() {
   useEffect(() => {
     setParamsRoute()
   }, [id])
+
+  async function handleAdd() {
+    if (!name.trim()) {
+      return Alert.alert('Cadastro', 'Informe o nome da pizza.')
+    }
+
+    if (!description.trim()) {
+      return Alert.alert('Cadastro', 'Informe a descrição da pizza.')
+    }
+
+    if (!image) {
+      return Alert.alert('Cadastro', 'Selecione a imagem da pizza.')
+    }
+
+    if (!priceSizeP || !priceSizeM || !priceSizeG) {
+      return Alert.alert(
+        'Cadastro',
+        'Informe o preço de todos os tamanhos da pizza.'
+      )
+    }
+    setIsLoading(true)
+    const fileName = new Date().getTime()
+    const storageRef = ref(storage, `/pizzas/${fileName}.png`)
+
+    const response = await fetch(image)
+    const blob = await response.blob()
+
+    const uploadTask = uploadBytesResumable(storageRef, blob)
+    const photo_url = await getDownloadURL(uploadTask.snapshot.ref)
+
+    const userRef = collection(db, 'Pizzas')
+
+    return await addDoc(userRef, {
+      name,
+      name_insensitive: name.toLowerCase().trim(),
+      description,
+      prices_sizes: {
+        p: priceSizeP,
+        m: priceSizeM,
+        g: priceSizeG
+      },
+      photo_url,
+      photo_path: storageRef.fullPath
+    })
+      .then(() => {
+        Alert.alert('Cadastro', 'Cadastro concluido com sucesso')
+        navigation.navigate('home')
+      })
+      .catch(function (error) {
+        console.log(
+          'There has been a problem with your fetch operation: ' + error.message
+        )
+
+        throw error
+      })
+  }
   return (
     <KeyboardAvoidingView
       flex="1"
@@ -167,11 +252,36 @@ export default function RegisterPizza() {
 
           <Stack px="5" space={2} paddingBottom={3}>
             <Text>Tamanhos e Preços</Text>
-            <InputPrice size="P" />
-            <InputPrice size="M" />
-            <InputPrice size="G" />
+            <InputPrice
+              size="P"
+              onChangeText={setPriceSizeP}
+              value={priceSizeP}
+            />
+            <InputPrice
+              size="M"
+              onChangeText={setPriceSizeM}
+              value={priceSizeM}
+            />
+            <InputPrice
+              size="G"
+              onChangeText={setPriceSizeG}
+              value={priceSizeG}
+            />
           </Stack>
         </FormControl>
+        <Button
+          bg={'red.700'}
+          w="80%"
+          alignSelf={'center'}
+          alignItems="center"
+          h="7%"
+          marginBottom={'20px'}
+          borderRadius="10"
+          _pressed={{ bg: 'red.700', opacity: 0.6 }}
+          onPress={handleAdd}
+        >
+          Salvar Produto
+        </Button>
       </ScrollView>
     </KeyboardAvoidingView>
   )
