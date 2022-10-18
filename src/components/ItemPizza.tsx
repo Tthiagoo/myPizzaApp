@@ -7,12 +7,17 @@ import {
   ImageSourcePropType
 } from 'react-native'
 
-export type ProductProps = {
+interface ProductProps {
   id: string
-  image: string
-  title: string
+  photo_url: string
+  name: string
   description: string
   isAdd?: boolean
+  prices_sizes: {
+    p: string
+    m: string
+    g: string
+  }
 }
 type Props = TouchableOpacityProps & {
   data: ProductProps
@@ -24,7 +29,7 @@ export default function ItemPizza({ data, ...rest }: Props) {
       <HStack fontFamily={'heading'} h="auto">
         <Image
           source={{
-            uri: `${data.image}`
+            uri: `${data.photo_url}`
           }}
           alt="Alternate Text"
           size="lg"
@@ -33,7 +38,7 @@ export default function ItemPizza({ data, ...rest }: Props) {
         />
         <VStack justifyContent={'center'} h="auto" maxW="60%">
           <Heading size="sm" color="#572D31">
-            {data?.title}
+            {data?.name}
           </Heading>
           <Text lineHeight={'20px'} numberOfLines={10} fontSize={14}>
             {data.description}

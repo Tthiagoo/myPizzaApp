@@ -1,6 +1,6 @@
 import { Box, Button } from 'native-base'
-import React from 'react'
-import { useNavigation } from '@react-navigation/native'
+import React, { useCallback, useState } from 'react'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import Search from '../components/Search'
 import Header from '../components/Header'
 
@@ -8,26 +8,66 @@ import HeaderListPizza from '../components/HeaderListPizza'
 import MenuPizza from '../components/MenuPizza'
 import { useAuth } from '../context/auth'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import {
+  collection,
+  query,
+  orderBy,
+  startAt,
+  endAt,
+  getDocs
+} from 'firebase/firestore'
+import { db } from '../config/firebase'
+import { ProductProps } from '../types/product'
 
 export default function Home() {
+  const [search, setSearch] = useState('')
+  const [products, setProducts] = useState<ProductProps[]>([])
   type RootStackParamList = {
     RegisterPizza: { isAdd: boolean }
   }
   const { user } = useAuth()
 
-  console.log(user?.isAdmin ? 'é admin' : 'nao é')
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
   function handleNavigation() {
     navigation.navigate('RegisterPizza', { isAdd: true })
   }
 
+  async function getMenuPizza(value: string) {
+    const formattedValue = value.toLocaleLowerCase().trim()
+    const userRef = collection(db, 'Pizzas')
+    const usersDocReference = query(
+      userRef,
+      orderBy('name_insensitive'),
+      startAt(formattedValue),
+      endAt(`${formattedValue}\uf8ff`)
+    )
+    const querySnapshot = await getDocs(usersDocReference)
+    const dataProducts = querySnapshot.docs.map(doc => {
+      return {
+        id: doc.id,
+        ...doc.data()
+      }
+    }) as ProductProps[]
+    setProducts(dataProducts)
+    console.log(dataProducts)
+  }
+
+  function handleSearch() {
+    getMenuPizza(search)
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      getMenuPizza('')
+    }, [])
+  )
   return (
     <Box flex={1} bg="light.200">
       <Header />
-      <Search />
+      <Search onChangeText={setSearch} value={search} onSearch={handleSearch} />
       <HeaderListPizza />
-      <MenuPizza />
+      <MenuPizza products={products} />
       {user?.isAdmin && (
         <Button
           bg={'red.700'}

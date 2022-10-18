@@ -57,7 +57,7 @@ export default function RegisterPizza() {
 
   const [image, setImage] = useState('')
   const [imgUrl, setImgUrl] = useState(null)
-  const [progresspercent, setProgresspercent] = useState(0)
+  const [percent, setPercent] = useState(0)
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [priceSizeP, setPriceSizeP] = useState('')
@@ -66,7 +66,6 @@ export default function RegisterPizza() {
   const [isLoading, setIsLoading] = useState(false)
   const [photoPath, setPhotoPath] = useState('')
 
-  console.log(image)
   async function handlePickerImage() {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
 
@@ -84,8 +83,6 @@ export default function RegisterPizza() {
 
   function setParamsRoute() {
     if (id) {
-      console.log('foi')
-      console.log(title)
       setImage(imageRoute)
       setName(title)
       setDescription(detalhes)
@@ -122,38 +119,57 @@ export default function RegisterPizza() {
     setIsLoading(true)
     const fileName = new Date().getTime()
     const storageRef = ref(storage, `/pizzas/${fileName}.png`)
+    const userRef = collection(db, 'Pizzas')
 
     const response = await fetch(image)
     const blob = await response.blob()
 
     const uploadTask = uploadBytesResumable(storageRef, blob)
-    const photo_url = await getDownloadURL(uploadTask.snapshot.ref)
 
-    const userRef = collection(db, 'Pizzas')
-
-    return await addDoc(userRef, {
-      name,
-      name_insensitive: name.toLowerCase().trim(),
-      description,
-      prices_sizes: {
-        p: priceSizeP,
-        m: priceSizeM,
-        g: priceSizeG
-      },
-      photo_url,
-      photo_path: storageRef.fullPath
-    })
-      .then(() => {
-        Alert.alert('Cadastro', 'Cadastro concluido com sucesso')
-        navigation.navigate('home')
-      })
-      .catch(function (error) {
-        console.log(
-          'There has been a problem with your fetch operation: ' + error.message
+    uploadTask.on(
+      'state_changed',
+      snapshot => {
+        const percent = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
         )
 
-        throw error
-      })
+        // update progress
+        setPercent(percent)
+        console.log(percent)
+      },
+      err => console.log(err),
+      async () => {
+        const photo_url = await getDownloadURL(uploadTask.snapshot.ref)
+        await addDoc(userRef, {
+          name,
+          name_insensitive: name.toLowerCase().trim(),
+          description,
+          prices_sizes: {
+            p: priceSizeP,
+            m: priceSizeM,
+            g: priceSizeG
+          },
+          photo_url: photo_url,
+          photo_path: storageRef.fullPath
+        })
+          .then(() => {
+            setIsLoading(false)
+            Alert.alert('Cadastro', 'Cadastro concluido com sucesso')
+            navigation.navigate('home')
+          })
+          .catch(function (error) {
+            console.log(
+              'There has been a problem with your fetch operation: ' +
+                error.message
+            )
+
+            throw error
+          })
+        // download url
+      }
+    )
+
+    console.log('chegou aqui')
   }
   return (
     <KeyboardAvoidingView
@@ -272,6 +288,7 @@ export default function RegisterPizza() {
         <Button
           bg={'red.700'}
           w="80%"
+          isLoading={isLoading}
           alignSelf={'center'}
           alignItems="center"
           h="7%"
