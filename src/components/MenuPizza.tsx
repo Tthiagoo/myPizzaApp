@@ -1,19 +1,13 @@
-import { useFocusEffect, useNavigation } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import {
-  collection,
-  endAt,
-  getDocs,
-  orderBy,
-  query,
-  startAt
-} from 'firebase/firestore'
+
 import { FlatList, Text } from 'native-base'
-import React, { useCallback, useEffect, useState } from 'react'
-import { db } from '../config/firebase'
+import React from 'react'
+
 import { useAuth } from '../context/auth'
 import { ProductProps } from '../types/product'
 import ItemPizza from './ItemPizza'
+
 type RootStackParamList = {
   order: { id: string }
   orderDetail: { id: string }

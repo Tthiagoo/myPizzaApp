@@ -66,7 +66,7 @@ export default function Home() {
     <Box flex={1} bg="light.200">
       <Header />
       <Search onChangeText={setSearch} value={search} onSearch={handleSearch} />
-      <HeaderListPizza />
+      <HeaderListPizza qntProd={products.length} />
       <MenuPizza products={products} />
       {user?.isAdmin && (
         <Button

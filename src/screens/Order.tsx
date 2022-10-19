@@ -12,26 +12,14 @@ import {
 import React, { useState } from 'react'
 import { ImageSourcePropType, Platform, TouchableOpacity } from 'react-native'
 import FormOrderPizza from '../components/FormOrderPizza'
-import { ProductProps } from '../components/ItemPizza'
+
 import RadioRow from '../components/RadioRow'
-
-interface PizzaOrderProps {
-  image: ImageSourcePropType | undefined
-  title: string
-  description: string
-}
-
-export type RootStackParamList = {
-  order: ProductProps
-  RegisterPizza: { isAdd: boolean; PizzaProps: ProductProps }
-}
-
-export type RootRouteProps<RouteName extends keyof RootStackParamList> =
-  RouteProp<RootStackParamList, RouteName>
+import { ProductProps } from '../types/product'
+import { RootStackParamList } from '../types/StackRoutesParams'
 
 export default function PizzaOrder() {
   const route = useRoute<RouteProp<RootStackParamList, 'order'>>()
-  const { id, image, title } = route.params
+  const { id, name, photo_url } = route.params
 
   const navigation = useNavigation()
 
@@ -58,12 +46,12 @@ export default function PizzaOrder() {
           rounded={'full'}
           size="2xl"
           top={'-120px'}
-          source={{ uri: image }}
+          source={{ uri: photo_url }}
           alignSelf="center"
         />
         <FormControl px="20px" top="-85px" h="330">
           <Heading alignSelf={'center'} mb="25px">
-            {title}
+            {name}
           </Heading>
 
           <RadioRow />

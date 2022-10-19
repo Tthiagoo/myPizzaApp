@@ -25,23 +25,16 @@ import {
   getDocs,
   query,
   setDoc,
-  where
+  where,
+  updateDoc,
+  deleteDoc
 } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
-import { Alert, Platform } from 'react-native'
+import { Alert, Platform, TouchableOpacity } from 'react-native'
 import { InputPrice } from '../components/itemPrice'
-import { ProductProps } from '../types/product'
-import { RootStackParamList } from './Order'
-import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage'
 
-type PizzaResponse = ProductProps & {
-  photo_path: string
-  prices_sizes: {
-    p: string
-    m: string
-    g: string
-  }
-}
+import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage'
+import { RootStackParamList } from '../types/StackRoutesParams'
 
 export default function RegisterPizza() {
   const navigation = useNavigation()
@@ -49,22 +42,21 @@ export default function RegisterPizza() {
 
   const {
     id,
-    image: imageRoute,
-    title,
+    photo_url,
+    name: title,
     description: detalhes,
+    prices_sizes,
     isAdd
   } = route.params
 
   const [image, setImage] = useState('')
-  const [imgUrl, setImgUrl] = useState(null)
-  const [percent, setPercent] = useState(0)
+
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [priceSizeP, setPriceSizeP] = useState('')
   const [priceSizeM, setPriceSizeM] = useState('')
   const [priceSizeG, setPriceSizeG] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [photoPath, setPhotoPath] = useState('')
 
   async function handlePickerImage() {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
@@ -81,21 +73,47 @@ export default function RegisterPizza() {
     }
   }
 
-  function setParamsRoute() {
-    if (id) {
-      setImage(imageRoute)
-      setName(title)
-      setDescription(detalhes)
-    }
-  }
-
   function handleGoBack() {
     navigation.goBack()
   }
 
   useEffect(() => {
-    setParamsRoute()
+    if (id) {
+      setImage(photo_url)
+      setName(title)
+      setDescription(detalhes)
+      setPriceSizeP(prices_sizes.p)
+      setPriceSizeM(prices_sizes.m)
+      setPriceSizeG(prices_sizes.g)
+    }
   }, [id])
+
+  async function handleDelete() {
+    Alert.alert(
+      'Deseja Deletar o produto?',
+      '',
+      [
+        {
+          text: 'OK',
+          onPress: async () => {
+            await deleteDoc(doc(db, 'Pizzas', id))
+              .then(() => {
+                Alert.alert('Delete', 'Produto excluido com sucesso')
+                navigation.navigate('home')
+              })
+              .catch(err => {
+                console.log(err)
+              })
+          }
+        },
+        {
+          text: 'Cancel',
+          style: 'cancel'
+        }
+      ],
+      { cancelable: false }
+    )
+  }
 
   async function handleAdd() {
     if (!name.trim()) {
@@ -132,10 +150,6 @@ export default function RegisterPizza() {
         const percent = Math.round(
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100
         )
-
-        // update progress
-        setPercent(percent)
-        console.log(percent)
       },
       err => console.log(err),
       async () => {
@@ -171,6 +185,78 @@ export default function RegisterPizza() {
 
     console.log('chegou aqui')
   }
+
+  async function handleUpdate() {
+    if (!name.trim()) {
+      return Alert.alert('Cadastro', 'Informe o nome da pizza.')
+    }
+
+    if (!description.trim()) {
+      return Alert.alert('Cadastro', 'Informe a descrição da pizza.')
+    }
+
+    if (!image) {
+      return Alert.alert('Cadastro', 'Selecione a imagem da pizza.')
+    }
+
+    if (!priceSizeP || !priceSizeM || !priceSizeG) {
+      return Alert.alert(
+        'Cadastro',
+        'Informe o preço de todos os tamanhos da pizza.'
+      )
+    }
+    setIsLoading(true)
+    const fileName = new Date().getTime()
+    const storageRef = ref(storage, `/pizzas/${fileName}.png`)
+    const userRef = doc(db, 'Pizzas', id)
+
+    const response = await fetch(image)
+    const blob = await response.blob()
+
+    const uploadTask = uploadBytesResumable(storageRef, blob)
+
+    uploadTask.on(
+      'state_changed',
+      snapshot => {
+        const percent = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        )
+      },
+      err => console.log(err),
+      async () => {
+        const photo_url = await getDownloadURL(uploadTask.snapshot.ref)
+        await updateDoc(userRef, {
+          name,
+          name_insensitive: name.toLowerCase().trim(),
+          description,
+          prices_sizes: {
+            p: priceSizeP,
+            m: priceSizeM,
+            g: priceSizeG
+          },
+          photo_url: photo_url,
+          photo_path: storageRef.fullPath
+        })
+          .then(() => {
+            setIsLoading(false)
+            Alert.alert('Update', 'Atulização concluida com sucesso')
+            navigation.navigate('home')
+          })
+          .catch(function (error) {
+            console.log(
+              'There has been a problem with your fetch operation: ' +
+                error.message
+            )
+
+            throw error
+          })
+        // download url
+      }
+    )
+
+    console.log('chegou aqui')
+  }
+
   return (
     <KeyboardAvoidingView
       flex="1"
@@ -183,11 +269,19 @@ export default function RegisterPizza() {
         bg="red.700"
         alignItems={'center'}
         justifyContent="center"
+        flexDirection={'row'}
         color="white"
       >
         <Heading size="md" color="white">
           Cadastrar Pizza
         </Heading>
+        {id && (
+          <Box ml="4">
+            <TouchableOpacity style={{ padding: 7 }} onPress={handleDelete}>
+              <Text color={'white'}>Deletar</Text>
+            </TouchableOpacity>
+          </Box>
+        )}
       </Flex>
       <ScrollView showsVerticalScrollIndicator={false}>
         <HStack mt="8" space={7} justifyContent={'center'}>
@@ -295,9 +389,9 @@ export default function RegisterPizza() {
           marginBottom={'20px'}
           borderRadius="10"
           _pressed={{ bg: 'red.700', opacity: 0.6 }}
-          onPress={handleAdd}
+          onPress={id ? handleUpdate : handleAdd}
         >
-          Salvar Produto
+          {id ? 'Editar Produto' : 'Salvar Produto'}
         </Button>
       </ScrollView>
     </KeyboardAvoidingView>
