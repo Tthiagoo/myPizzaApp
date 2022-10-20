@@ -53,7 +53,19 @@ function AuthProvider({ children }: AuthProviderProps) {
     querySnapshot.forEach(async doc => {
       if (doc.id.replace('}', '') === uid) {
         const loggedUser = doc.data() as User
-        setUser(loggedUser)
+        const newUser = {
+          id: doc.id,
+          name: loggedUser.name,
+          isAdmin: loggedUser.isAdmin,
+          test: loggedUser.test
+        }
+        setUser(newUser)
+
+        console.log(doc.id)
+        console.log(loggedUser.id)
+        console.log('loggedd')
+        console.log(newUser)
+        console.log(user)
         await AsyncStorage.setItem(USER_COLLECTION, JSON.stringify(user))
         console.log('colocou o user no storage ')
       }
@@ -104,6 +116,7 @@ function AuthProvider({ children }: AuthProviderProps) {
 
     if (storedUser) {
       const userData = JSON.parse(storedUser) as User
+
       console.log(userData)
       console.log('userdata do storage  ')
       setUser(userData)

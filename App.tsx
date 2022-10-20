@@ -13,7 +13,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { theme } from './src/theme/customTheme'
 import { Loading } from './src/components/Loading'
 import { AuthProvider } from './src/context/auth'
-import { CartProvider } from './src/context/cartContext'
+import { CartProvider } from './src/context/newCartContext'
 
 const config = {
   dependencies: {

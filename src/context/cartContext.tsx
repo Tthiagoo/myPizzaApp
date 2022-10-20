@@ -6,11 +6,12 @@ import {
   useState
 } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { Product } from '../types/CartStorageTypes'
+
+import { OrderProps } from '../types/orderProps'
 
 interface UpdateProductAmount {
   productId: string
-  amount: number
+  quantidade: number
 }
 
 interface CartProviderProps {
@@ -18,29 +19,33 @@ interface CartProviderProps {
 }
 
 interface CartContextData {
-  cart: Promise<Product[]>
+  cart: Promise<OrderProps[]>
 
-  addProduct: (productId: string, product: Product) => Promise<void>
+  addProduct: (productId: string, product: OrderProps) => Promise<void>
   removeProduct: (productId: string) => void
-  updateProductAmount: ({ productId, amount }: UpdateProductAmount) => void
+  updateProductAmount: ({ productId, quantidade }: UpdateProductAmount) => void
 }
 
 const CartContext = createContext<CartContextData>({} as CartContextData)
 
 export function CartProvider({ children }: CartProviderProps): JSX.Element {
-  const USER_COLLECTION = '@gopizza:users'
+  const USER_COLLECTION = '@gopizza:product'
 
-  const [cart, setCart] = useState<Promise<Product[]>>(async () => {
+  const [cart, setCart] = useState<Promise<OrderProps[]>>(async () => {
     const storagedCart = await AsyncStorage.getItem(USER_COLLECTION)
-    const oldCart = storagedCart ? (JSON.parse(storagedCart) as Product[]) : []
+    console.log('storaged')
+    console.log(JSON.parse([storagedCart]) as OrderProps[])
+    const oldCart = storagedCart
+      ? (JSON.parse(storagedCart) as OrderProps[])
+      : []
     return oldCart
   })
 
-  const addProduct = async (productId: string, product: Product) => {
+  const addProduct = async (productId: string, product: OrderProps) => {
     console.log('executou')
     try {
       console.log('chegou aqui try')
-
+      console.log(product)
       console.log(cart)
       const productInCart = (await cart)?.find(
         product => product.id === productId
@@ -51,14 +56,16 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
         console.log('chegou no product in cart')
         productInCart.quantidade += 1
 
-        await AsyncStorage.setItem(USER_COLLECTION, JSON.stringify({ ...cart }))
+        await AsyncStorage.setItem(
+          USER_COLLECTION,
+          JSON.stringify(...(await cart))
+        )
 
         //setCart(await newCart)
       } else {
         console.log('chegou aqui no else')
         const newProduct = {
-          ...product,
-          amount: 1
+          ...product
         }
         console.log('chegou aqui no new cart')
 

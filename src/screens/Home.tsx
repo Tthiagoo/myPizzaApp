@@ -18,6 +18,8 @@ import {
 } from 'firebase/firestore'
 import { db } from '../config/firebase'
 import { ProductProps } from '../types/product'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useCartContext } from '../context/cartContext'
 
 export default function Home() {
   const [search, setSearch] = useState('')
@@ -26,6 +28,7 @@ export default function Home() {
     RegisterPizza: { isAdd: boolean }
   }
   const { user } = useAuth()
+  const { addProduct, cart } = useCartContext()
 
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
@@ -33,6 +36,16 @@ export default function Home() {
     navigation.navigate('RegisterPizza', { isAdd: true })
   }
 
+  async function removeItemValue() {
+    try {
+      console.log('foi')
+      await AsyncStorage.removeItem('@gopizza:product')
+      await AsyncStorage.removeItem('@gopizza:users')
+      return true
+    } catch (exception) {
+      return false
+    }
+  }
   async function getMenuPizza(value: string) {
     const formattedValue = value.toLocaleLowerCase().trim()
     const userRef = collection(db, 'Pizzas')
@@ -50,7 +63,6 @@ export default function Home() {
       }
     }) as ProductProps[]
     setProducts(dataProducts)
-    console.log(dataProducts)
   }
 
   function handleSearch() {

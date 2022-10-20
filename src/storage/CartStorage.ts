@@ -1,9 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {
-  GetCartStorage,
-  Product,
-  SaveCartStorage
-} from '../types/CartStorageTypes'
+import { GetCartStorage, SaveCartStorage } from '../types/CartStorageTypes'
+import { OrderProps } from '../types/orderProps'
 const USER_COLLECTION = '@gopizza:users'
 
 export const getCartStorage: GetCartStorage = async () => {
@@ -13,18 +10,19 @@ export const getCartStorage: GetCartStorage = async () => {
   if (!data) {
     return []
   }
-  console.log('plants')
-  const plants = JSON.parse(data) as Product[]
+  console.log('get cart storage')
+  const plants = JSON.parse(data) as OrderProps[]
   console.log(plants)
 
   return plants
 }
 
-export const saveCartStorage: SaveCartStorage = async (Product: Product) => {
+export const saveCartStorage: SaveCartStorage = async (
+  oldCart: OrderProps,
+  Product: OrderProps
+) => {
   await AsyncStorage.setItem(
     USER_COLLECTION,
-    JSON.stringify({
-      ...Product
-    })
+    JSON.stringify({ ...oldCart, Product })
   )
 }

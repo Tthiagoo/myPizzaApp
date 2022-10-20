@@ -1,5 +1,5 @@
-import { Product } from './CartStorageTypes'
+import { OrderProps } from './orderProps'
 
-export type SaveProductsCart = (product: Product) => Promise<void>
-export type GetProductsCart = () => Promise<Product[]>
+export type SaveProductsCart = (product: OrderProps) => Promise<void>
+export type GetProductsCart = () => Promise<OrderProps[]>
 export type RemoveProduct = (id: number) => Promise<void>
