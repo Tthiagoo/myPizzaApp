@@ -23,10 +23,11 @@ interface CartProviderProps {
 }
 
 interface CartContext {
-  products: OrderProps[]
+  data: OrderProps[]
   addToCart(item: OrderProps): void
   increment(id: string): void
   decrement(id: string): void
+  remove(id: string): void
 }
 
 const CartContext = createContext<CartContext | null>(null)
@@ -35,12 +36,14 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
   const [data, setData] = useState<OrderProps[]>([])
 
   useEffect(() => {
+    console.log('primeiro')
+    console.log(data)
     async function loadProducts(): Promise<void> {
       const products = await AsyncStorage.getItem('@GoMarketplace:products')
       console.log('products')
       console.log(products)
       if (products) {
-        setData([...JSON.parse(products)])
+        setData([])
       }
     }
 
@@ -79,7 +82,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
       setData(
         data.map(product =>
           product.id === id
-            ? { ...product, quantity: product.quantidade + 1 }
+            ? { ...product, quantidade: product.quantidade + 1 }
             : product
         )
       )
@@ -87,7 +90,10 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
       await AsyncStorage.setItem(
         '@GoMarketplace:products',
         JSON.stringify(data)
-      )
+      ).then(() => {
+        console.log('data após incre')
+        console.log(data)
+      })
     },
     [data]
   )
@@ -97,7 +103,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
       setData(
         data.map(product =>
           product.id === id
-            ? { ...product, quantity: product.quantidade - 1 }
+            ? { ...product, quantidade: product.quantidade - 1 }
             : product
         )
       )
@@ -110,11 +116,21 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
     [data]
   )
 
-  const products = data
+  const remove = useCallback(
+    async (id: string) => {
+      setData(data.filter(product => product.id !== id))
+
+      await AsyncStorage.setItem(
+        '@GoMarketplace:products',
+        JSON.stringify(data)
+      )
+    },
+    [data]
+  )
 
   const value = React.useMemo(
-    () => ({ addToCart, increment, decrement, products }),
-    [products, addToCart, increment, decrement]
+    () => ({ addToCart, increment, decrement, data, remove }),
+    [data, addToCart, increment, decrement, remove]
   )
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>

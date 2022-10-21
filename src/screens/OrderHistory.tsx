@@ -2,12 +2,6 @@ import { Box, Divider, FlatList, Flex, Heading, Text } from 'native-base'
 import React from 'react'
 import OrderCard from '../components/OrderCard'
 
-export interface OrderProps {
-  id: string
-  pizza: string
-  image: string
-}
-
 export default function OrderHistory() {
   const orders: OrderProps[] = [
     {

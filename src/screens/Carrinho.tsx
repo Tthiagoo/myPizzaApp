@@ -7,61 +7,22 @@ import {
   Heading,
   Text
 } from 'native-base'
-import React from 'react'
+import React, { useMemo } from 'react'
 import CartItem from '../components/CartItem'
-import OrderDetailCard, { OrderDetailProp } from '../components/OrderDetailCard'
+
+import { useCart } from '../context/newCartContext'
 
 export default function Carrinho() {
-  const orders: OrderDetailProp[] = [
-    {
-      id: '1',
-      description: 'teste de descrição',
-      price: 'R$100',
-      title: 'test',
-      image:
-        'https://static.clubedaanamariabraga.com.br/wp-content/uploads/2020/08/pizza-margherita.jpg?x41527'
-    },
-    {
-      id: '2',
-      description: 'teste de descrição',
-      price: 'R$100',
-      title: 'test',
-      image:
-        'https://www.teusonhar.com.br/wp-content/uploads/2017/01/sonhar-com-coca-cola-e1487097028478.jpg'
-    },
-    {
-      id: '3',
-      description: 'teste de descrição',
-      price: 'R$100',
-      title: 'test',
-      image:
-        'https://blog.ginbrasil.com.br/wp-content/uploads/2022/01/gin-com-sprite-blog-gin-brasil.png'
-    },
-    {
-      id: '4',
-      description: 'teste de descrição',
-      price: 'R$100',
-      title: 'test',
-      image:
-        'https://www.paollarestaurante.com.br/uploads/images/2019/08/pizza-strogonoff-de-carne-1565146013.jpg'
-    },
-    {
-      id: '1224455344',
-      description: 'teste de descrição',
-      price: 'R$100',
-      title: 'test',
-      image:
-        'https://img.itdg.com.br/tdg/images/recipes/000/098/564/333992/333992_original.jpg'
-    },
-    {
-      id: '12234444',
-      description: 'teste de descrição',
-      price: 'R$100',
-      title: 'test',
-      image:
-        'https://guiadacozinha.com.br/wp-content/uploads/2019/10/pizza-hot-dog-38187.jpg'
-    }
-  ]
+  const { increment, decrement, data } = useCart()
+  const cartTotal = useMemo(() => {
+    const total = data.reduce((accumulator, product) => {
+      const productSubTotal = product.price * product.quantidade
+
+      return accumulator + productSubTotal
+    }, 0)
+
+    return total
+  }, [data])
   return (
     <Flex flex="1" bg="light.200" alignItems={'center'}>
       <Flex
@@ -88,7 +49,7 @@ export default function Carrinho() {
         borderBottomWidth={1}
         shadow={1}
       >
-        <Heading size="sm">Total: R$56</Heading>
+        <Heading size="sm">Total: R$ {`${cartTotal}`}</Heading>
         <Button
           _pressed={{ opacity: 0.6 }}
           w="auto"
@@ -105,7 +66,7 @@ export default function Carrinho() {
         </Button>
       </Flex>
       <FlatList
-        data={orders}
+        data={data}
         keyExtractor={item => item.id}
         renderItem={({ item, index }) => (
           <CartItem index={index} key={index} data={item} />

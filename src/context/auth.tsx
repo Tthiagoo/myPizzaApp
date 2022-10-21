@@ -131,6 +131,7 @@ function AuthProvider({ children }: AuthProviderProps) {
 
     console.log('depois do signout')
     await AsyncStorage.removeItem(USER_COLLECTION)
+    await AsyncStorage.removeItem('@GoMarketplace:products')
     setUser(null)
   }
 

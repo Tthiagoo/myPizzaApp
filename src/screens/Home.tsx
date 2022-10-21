@@ -28,7 +28,6 @@ export default function Home() {
     RegisterPizza: { isAdd: boolean }
   }
   const { user } = useAuth()
-  const { addProduct, cart } = useCartContext()
 
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
@@ -41,6 +40,7 @@ export default function Home() {
       console.log('foi')
       await AsyncStorage.removeItem('@gopizza:product')
       await AsyncStorage.removeItem('@gopizza:users')
+      await AsyncStorage.removeItem('@GoMarketplace:products')
       return true
     } catch (exception) {
       return false

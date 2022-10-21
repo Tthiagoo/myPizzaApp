@@ -8,29 +8,52 @@ import {
   MinusIcon,
   AddIcon,
   View,
-  Box
+  Box,
+  CloseIcon
 } from 'native-base'
-import React from 'react'
-import { OrderProps } from '../screens/OrderHistory'
+import React, { useMemo } from 'react'
+
 import Swipeable from 'react-native-gesture-handler/Swipeable'
 import { Feather } from '@expo/vector-icons'
 
-import { Animated } from 'react-native'
+import { Animated, TouchableOpacity } from 'react-native'
 import { RectButton } from 'react-native-gesture-handler'
+import { OrderProps } from '../types/orderProps'
+import { useCart } from '../context/newCartContext'
+import formatValue from '../utils/formatValue'
 
-export interface OrderDetailProp {
-  id: string
-  title: string
-  description: string
-  price: string
-  image: string
-}
 interface Props {
   index: number
-  data: OrderDetailProp
+  data: OrderProps
 }
 export default function CartItem({ index, data, ...rest }: Props) {
-  const RenderRight = (progress, dragX) => {
+  const { increment, decrement, data: products, remove } = useCart()
+
+  function handleIncrement(id: string): void {
+    console.log(id)
+    increment(id)
+  }
+
+  function handleDecrement(id: string): void {
+    console.log(id)
+    decrement(id)
+  }
+  function handleRemove(id: string): void {
+    console.log(id)
+    remove(id)
+  }
+
+  const cartTotal = useMemo(() => {
+    const total = products.reduce((accumulator, product) => {
+      const productSubTotal = product.price * product.quantidade
+
+      return accumulator + productSubTotal
+    }, 0)
+
+    return total
+  }, [products])
+
+  /*const RenderRight = (progress, dragX) => {
     const scale = dragX.interpolate({
       inputRange: [-50, 0.5],
       outputRange: [1, 0.1]
@@ -58,7 +81,7 @@ export default function CartItem({ index, data, ...rest }: Props) {
         </Animated.Text>
       </View>
     )
-  }
+  }*/
 
   return (
     <Swipeable
@@ -70,22 +93,33 @@ export default function CartItem({ index, data, ...rest }: Props) {
         </Animated.View>
       )}
     >
-      <HStack w="340" px="4" py="1" marginY="2" justifyContent="space-between">
+      <HStack w="340" px="3" py="1" marginY="2" justifyContent="space-between">
+        <TouchableOpacity onPress={() => handleRemove(data.id)}>
+          <CloseIcon color="red.500" size="5" />
+        </TouchableOpacity>
+
         <VStack w="60%" space={1}>
-          <Heading size="sm">{data.title}</Heading>
+          <Heading size="sm">{data.name}</Heading>
           <Text color="gray.500">{data.description}</Text>
           <HStack space={'5'}>
-            <Text fontWeight={'bold'}>{data.price}</Text>
+            <Text fontWeight={'bold'}>{`R$ ${
+              data.price * data.quantidade
+            }`}</Text>
             <HStack space={2}>
-              <MinusIcon size="5" mt="0.5" color="red.500" />
-              <Text>4</Text>
-              <AddIcon size="5" mt="0.5" color="red.500" />
+              <TouchableOpacity onPress={() => handleDecrement(data.id)}>
+                <MinusIcon size="6" mt="0.5" color="red.500" />
+              </TouchableOpacity>
+
+              <Text>{data.quantidade}</Text>
+              <TouchableOpacity onPress={() => handleIncrement(data.id)}>
+                <AddIcon size="22px" mt="0.5" color="red.500" />
+              </TouchableOpacity>
             </HStack>
           </HStack>
         </VStack>
         <Image
           source={{
-            uri: `${data.image}`
+            uri: `${data.photo_url}`
           }}
           size="md"
           rounded="md"
