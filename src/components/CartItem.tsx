@@ -18,13 +18,13 @@ import { Feather } from '@expo/vector-icons'
 
 import { Animated, TouchableOpacity } from 'react-native'
 import { RectButton } from 'react-native-gesture-handler'
-import { OrderProps } from '../types/orderProps'
+import { ProductProps } from '../types/orderProps'
 import { useCart } from '../context/newCartContext'
 import formatValue from '../utils/formatValue'
 
 interface Props {
   index: number
-  data: OrderProps
+  data: ProductProps
 }
 export default function CartItem({ index, data, ...rest }: Props) {
   const { increment, decrement, data: products, remove } = useCart()
@@ -37,6 +37,11 @@ export default function CartItem({ index, data, ...rest }: Props) {
   function handleDecrement(id: string): void {
     console.log(id)
     decrement(id)
+    console.log(data.quantidade)
+    if (data.quantidade < 2) {
+      console.log('foi')
+      return remove(id)
+    }
   }
   function handleRemove(id: string): void {
     console.log(id)

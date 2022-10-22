@@ -8,7 +8,7 @@ import React, {
 } from 'react'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { OrderProps } from '../types/orderProps'
+import { ProductProps } from '../types/OrderProps'
 
 interface CartState {
   id: string
@@ -23,25 +23,23 @@ interface CartProviderProps {
 }
 
 interface CartContext {
-  data: OrderProps[]
-  addToCart(item: OrderProps): void
+  data: ProductProps[]
+  addToCart(item: ProductProps): void
   increment(id: string): void
   decrement(id: string): void
   remove(id: string): void
+  reseteCart(): void
 }
 
 const CartContext = createContext<CartContext | null>(null)
 
 export function CartProvider({ children }: CartProviderProps): JSX.Element {
-  const [data, setData] = useState<OrderProps[]>([])
+  const [data, setData] = useState<ProductProps[]>([])
 
   useEffect(() => {
-    console.log('primeiro')
-    console.log(data)
     async function loadProducts(): Promise<void> {
       const products = await AsyncStorage.getItem('@GoMarketplace:products')
-      console.log('products')
-      console.log(products)
+
       if (products) {
         setData([])
       }
@@ -51,22 +49,17 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
   }, [])
 
   const addToCart = useCallback(
-    async (product: OrderProps) => {
+    async (product: ProductProps) => {
       const productExists = data.find(p => p.id === product.id)
 
       const quantidade = productExists ? productExists.quantidade + 1 : 1
 
       if (productExists) {
-        console.group('console do addTo cart se exist')
-        console.log(data)
-        console.group()
         setData(
           data.map(p => (p.id === product.id ? { ...product, quantidade } : p))
         )
       } else {
         setData([...data, { ...product }])
-        console.log(data)
-        console.table(data)
       }
 
       await AsyncStorage.setItem(
@@ -90,10 +83,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
       await AsyncStorage.setItem(
         '@GoMarketplace:products',
         JSON.stringify(data)
-      ).then(() => {
-        console.log('data após incre')
-        console.log(data)
-      })
+      )
     },
     [data]
   )
@@ -127,10 +117,15 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
     },
     [data]
   )
+  const reseteCart = useCallback(async () => {
+    setData([])
+
+    await AsyncStorage.removeItem('@GoMarketplace:products')
+  }, [data])
 
   const value = React.useMemo(
-    () => ({ addToCart, increment, decrement, data, remove }),
-    [data, addToCart, increment, decrement, remove]
+    () => ({ addToCart, increment, decrement, data, remove, reseteCart }),
+    [data, addToCart, increment, decrement, remove, reseteCart]
   )
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>

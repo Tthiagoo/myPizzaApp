@@ -3,23 +3,39 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { Badge, Box, Flex, Heading, Image, Text } from 'native-base'
 import React from 'react'
 import { TouchableOpacityProps, TouchableOpacity } from 'react-native'
-
-import { OrderProps } from '../screens/OrderHistory'
-import { RootStackParamList } from './MenuPizza'
+import { HistoryProps } from '../screens/OrderHistory'
+import { ProductProps } from '../types/orderProps'
+import { RootStackParamList } from '../types/StackRoutesParams'
 
 type Props = TouchableOpacityProps & {
+  dataOrderDetail: ProductProps
   index: number
-  data: OrderProps
+  data: HistoryProps
+  lenghtArrayHistory: number
+  itemList: ProductProps[]
+  priceTotal: number
 }
-export default function OrderCard({ index, data, ...rest }: Props) {
+export default function OrderCard({
+  index,
+  data,
+  dataOrderDetail,
+  lenghtArrayHistory,
+  itemList,
+  priceTotal,
+  ...rest
+}: Props) {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
 
-  function handleOpen(id: string) {
-    navigation.navigate('orderDetail', { id })
+  function handleOpen() {
+    navigation.navigate('orderDetail', { itemList, priceTotal })
   }
+  console.log(lenghtArrayHistory)
   return (
-    <TouchableOpacity style={{ width: '50%' }} onPress={() => handleOpen('1')}>
+    <TouchableOpacity
+      style={lenghtArrayHistory === 1 ? { width: '100%' } : { width: '50%' }}
+      onPress={() => handleOpen()}
+    >
       <Flex
         flexDirection={'column'}
         alignItems="center"
@@ -31,16 +47,16 @@ export default function OrderCard({ index, data, ...rest }: Props) {
       >
         <Image
           source={{
-            uri: data.image
+            uri: dataOrderDetail.photo_url
           }}
           size="xl"
           rounded="full"
           alt="pizza"
         />
         <Heading color="#572D31" mt="4" size={'md'}>
-          04/07 - 18:00
+          {data.date} - {data.hours}
         </Heading>
-        <Text>Apto 100 Bl 2 • R$ 100</Text>
+        <Text>R$ {data.priceTotal}</Text>
         <Badge
           mt="2"
           bg="#528F33"
@@ -48,7 +64,7 @@ export default function OrderCard({ index, data, ...rest }: Props) {
           paddingY={'5'}
           borderRadius={'10'}
         >
-          <Text color="white">Pronto</Text>
+          <Text color="white">{data.status}</Text>
         </Badge>
       </Flex>
     </TouchableOpacity>

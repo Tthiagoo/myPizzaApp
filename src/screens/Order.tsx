@@ -54,8 +54,6 @@ export default function PizzaOrder() {
             {name}
           </Heading>
 
-          <RadioRow />
-
           <FormOrderPizza />
         </FormControl>
       </ScrollView>

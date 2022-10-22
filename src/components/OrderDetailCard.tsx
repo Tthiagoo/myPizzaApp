@@ -1,30 +1,27 @@
 import { Heading, HStack, Text, VStack, Image } from 'native-base'
 import React from 'react'
-import { OrderProps } from '../screens/OrderHistory'
 
-export interface OrderDetailProp {
-  id: string
-  title: string
-  description: string
-  price: string
-  image: string
-}
+import { ProductProps } from '../types/orderProps'
+
 interface Props {
   index: number
-  data: OrderDetailProp
+  data: ProductProps
 }
 export default function OrderDetailCard({ index, data, ...rest }: Props) {
   return (
     <HStack w="340" px="4" py="1" marginY="2" justifyContent="space-between">
       <VStack w="60%" space={1}>
-        <Heading size="sm">{data.title}</Heading>
+        <Heading size="sm">{data.name}</Heading>
         <Text color="gray.500">{data.description}</Text>
 
-        <Text fontWeight={'bold'}>{data.price}</Text>
+        <HStack space={4}>
+          <Text fontWeight={'bold'}>R$ {data.price}</Text>
+          <Text>Quantidade: {data.quantidade}</Text>
+        </HStack>
       </VStack>
       <Image
         source={{
-          uri: `${data.image}`
+          uri: `${data.photo_url}`
         }}
         size="md"
         rounded="md"

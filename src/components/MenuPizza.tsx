@@ -8,7 +8,7 @@ import { useAuth } from '../context/auth'
 import { ProductProps } from '../types/product'
 import ItemPizza from './ItemPizza'
 
-type RootStackParamList = {
+export type RootStackParamList = {
   order: { id: string }
   orderDetail: { id: string }
   RegisterPizza: { isAdd: boolean }

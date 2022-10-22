@@ -34,7 +34,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
   const [cart, setCart] = useState<Promise<OrderProps[]>>(async () => {
     const storagedCart = await AsyncStorage.getItem(USER_COLLECTION)
     console.log('storaged')
-    console.log(JSON.parse([storagedCart]) as OrderProps[])
+
     const oldCart = storagedCart
       ? (JSON.parse(storagedCart) as OrderProps[])
       : []

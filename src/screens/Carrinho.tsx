@@ -1,3 +1,5 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { addDoc, collection } from 'firebase/firestore'
 import {
   Box,
   Button,
@@ -7,13 +9,18 @@ import {
   Heading,
   Text
 } from 'native-base'
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
+import { Alert } from 'react-native'
 import CartItem from '../components/CartItem'
+import { db } from '../config/firebase'
+import { useAuth } from '../context/auth'
 
 import { useCart } from '../context/newCartContext'
 
 export default function Carrinho() {
-  const { increment, decrement, data } = useCart()
+  const [loading, setLoading] = useState(Boolean)
+  const { data, reseteCart } = useCart()
+  const { user } = useAuth()
   const cartTotal = useMemo(() => {
     const total = data.reduce((accumulator, product) => {
       const productSubTotal = product.price * product.quantidade
@@ -23,6 +30,38 @@ export default function Carrinho() {
 
     return total
   }, [data])
+
+  const date = new Date().getDate()
+
+  const month = new Date().getMonth() + 1
+
+  const hours = new Date().getHours() //Current Hours
+  const min = new Date().getMinutes()
+
+  console.log('data')
+  console.log(data)
+
+  async function handleAddOrder() {
+    setLoading(true)
+    const orderRef = collection(db, 'Orders')
+    await addDoc(orderRef, {
+      userId: user?.id,
+      date: `${date}/${month}`,
+      aptoUser: 'Apto 200 bl 3',
+      hours: `${hours}:${min}`,
+      status: 'Aguardando',
+      order: data,
+      priceTotal: cartTotal
+    })
+      .then(async () => {
+        setLoading(false)
+        reseteCart()
+        Alert.alert('', 'Pedido concluido com sucesso')
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
   return (
     <Flex flex="1" bg="light.200" alignItems={'center'}>
       <Flex
@@ -51,6 +90,10 @@ export default function Carrinho() {
       >
         <Heading size="sm">Total: R$ {`${cartTotal}`}</Heading>
         <Button
+          isLoading={loading}
+          isLoadingText="Finalizar Pedido"
+          onPress={handleAddOrder}
+          isDisabled={data.length === 0}
           _pressed={{ opacity: 0.6 }}
           w="auto"
           style={{

@@ -1,52 +1,51 @@
+import { useFocusEffect } from '@react-navigation/native'
+import {
+  collection,
+  query,
+  orderBy,
+  startAt,
+  endAt,
+  getDocs,
+  where
+} from 'firebase/firestore'
 import { Box, Divider, FlatList, Flex, Heading, Text } from 'native-base'
-import React from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import OrderCard from '../components/OrderCard'
+import { db } from '../config/firebase'
+import { useAuth } from '../context/auth'
+import { ProductProps } from '../types/orderProps'
+
+export interface HistoryProps {
+  id: string
+  aptoUser: string
+  date: string
+  hours: string
+  order: ProductProps[]
+  status: string
+  userId: string
+  priceTotal: number
+}
 
 export default function OrderHistory() {
-  const orders: OrderProps[] = [
-    {
-      id: '12sdsd2344',
-      pizza: 'test',
-      image:
-        'https://static.clubedaanamariabraga.com.br/wp-content/uploads/2020/08/pizza-margherita.jpg?x41527'
-    },
-    {
-      id: '1223sddd4444',
-      pizza: 'test',
-      image:
-        'https://img.itdg.com.br/tdg/images/blog/uploads/2022/07/5-itens-necessarios-para-se-tornar-um-pizzaiolo-neste-Dia-da-Pizza.jpg?mode=crop&width={:width=%3E150,%20:height=%3E130'
-    },
-    {
-      id: '122ss344',
-      pizza: 'test',
-      image:
-        'https://img.itdg.com.br/tdg/images/blog/uploads/2022/07/5-itens-necessarios-para-se-tornar-um-pizzaiolo-neste-Dia-da-Pizza.jpg?mode=crop&width={:width=%3E150,%20:height=%3E130'
-    },
-    {
-      id: '122dsdsds344',
-      pizza: 'test',
-      image:
-        'https://img.itdg.com.br/tdg/images/blog/uploads/2022/07/5-itens-necessarios-para-se-tornar-um-pizzaiolo-neste-Dia-da-Pizza.jpg?mode=crop&width={:width=%3E150,%20:height=%3E130'
-    },
-    {
-      id: '122wewewew344',
-      pizza: 'test',
-      image:
-        'https://img.itdg.com.br/tdg/images/blog/uploads/2022/07/5-itens-necessarios-para-se-tornar-um-pizzaiolo-neste-Dia-da-Pizza.jpg?mode=crop&width={:width=%3E150,%20:height=%3E130'
-    },
-    {
-      id: '122wewewewew344',
-      pizza: 'test',
-      image:
-        'https://img.itdg.com.br/tdg/images/blog/uploads/2022/07/5-itens-necessarios-para-se-tornar-um-pizzaiolo-neste-Dia-da-Pizza.jpg?mode=crop&width={:width=%3E150,%20:height=%3E130'
-    },
-    {
-      id: '12ewewewew2344',
-      pizza: 'test',
-      image:
-        'https://img.itdg.com.br/tdg/images/blog/uploads/2022/07/5-itens-necessarios-para-se-tornar-um-pizzaiolo-neste-Dia-da-Pizza.jpg?mode=crop&width={:width=%3E150,%20:height=%3E130'
-    }
-  ]
+  const [history, setHistory] = useState<HistoryProps[]>([])
+  const { user } = useAuth()
+
+  async function getMenuPizza() {
+    const historyRef = collection(db, 'Orders')
+    const usersDocReference = query(historyRef, where('userId', '==', user?.id))
+    const querySnapshot = await getDocs(usersDocReference)
+    const dataProducts = querySnapshot.docs.map(doc => {
+      return doc.data()
+    }) as HistoryProps[]
+    console.log(dataProducts)
+    setHistory(dataProducts)
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      getMenuPizza()
+    }, [])
+  )
   return (
     <Flex flex="1" bg="light.200" alignItems={'center'}>
       <Flex
@@ -63,15 +62,21 @@ export default function OrderHistory() {
         </Heading>
       </Flex>
       <FlatList
-        data={orders}
-        keyExtractor={item => item.id}
+        data={history}
         renderItem={({ item, index }) => (
-          <OrderCard index={index} data={item} />
+          <OrderCard
+            index={index}
+            data={item}
+            dataOrderDetail={item.order[0]}
+            itemList={item.order}
+            lenghtArrayHistory={history.length}
+            priceTotal={item.priceTotal}
+          />
         )}
         numColumns={2}
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={() => <Divider />}
-        contentContainerStyle={{}}
+        ListEmptyComponent={<Text>Sem Pedidos Recentes</Text>}
       />
     </Flex>
   )

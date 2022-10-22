@@ -45,8 +45,7 @@ export default function RegisterPizza() {
     photo_url,
     name: title,
     description: detalhes,
-    prices_sizes,
-    isAdd
+    prices_sizes
   } = route.params
 
   const [image, setImage] = useState('')
@@ -82,9 +81,9 @@ export default function RegisterPizza() {
       setImage(photo_url)
       setName(title)
       setDescription(detalhes)
-      setPriceSizeP(prices_sizes.p)
-      setPriceSizeM(prices_sizes.m)
-      setPriceSizeG(prices_sizes.g)
+      setPriceSizeP(prices_sizes?.p)
+      setPriceSizeM(prices_sizes?.m)
+      setPriceSizeG(prices_sizes?.g)
     }
   }, [id])
 
