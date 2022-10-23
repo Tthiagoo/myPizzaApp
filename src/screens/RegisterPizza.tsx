@@ -15,7 +15,9 @@ import {
   ScrollView,
   Stack,
   Text,
-  TextArea
+  TextArea,
+  Badge,
+  Pressable
 } from 'native-base'
 
 import {
@@ -31,7 +33,7 @@ import {
 } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
 import { Alert, Platform, TouchableOpacity } from 'react-native'
-import { InputPrice } from '../components/itemPrice'
+import { InputPrice, InputPriceUnique } from '../components/itemPrice'
 
 import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage'
 import { RootStackParamList } from '../types/StackRoutesParams'
@@ -45,16 +47,19 @@ export default function RegisterPizza() {
     photo_url,
     name: title,
     description: detalhes,
-    prices_sizes
+    prices_sizes,
+    uniquePrice: priceUnique
   } = route.params
 
   const [image, setImage] = useState('')
 
   const [name, setName] = useState('')
+  const [typeProduct, setTypeProduct] = useState('Pizza')
   const [description, setDescription] = useState('')
   const [priceSizeP, setPriceSizeP] = useState('')
   const [priceSizeM, setPriceSizeM] = useState('')
   const [priceSizeG, setPriceSizeG] = useState('')
+  const [uniquePrice, setUniquePrice] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
   async function handlePickerImage() {
@@ -84,6 +89,7 @@ export default function RegisterPizza() {
       setPriceSizeP(prices_sizes?.p)
       setPriceSizeM(prices_sizes?.m)
       setPriceSizeG(prices_sizes?.g)
+      setUniquePrice(priceUnique)
     }
   }, [id])
 
@@ -126,13 +132,15 @@ export default function RegisterPizza() {
     if (!image) {
       return Alert.alert('Cadastro', 'Selecione a imagem da pizza.')
     }
-
-    if (!priceSizeP || !priceSizeM || !priceSizeG) {
-      return Alert.alert(
-        'Cadastro',
-        'Informe o preço de todos os tamanhos da pizza.'
-      )
+    if (typeProduct === 'Pizza') {
+      if (!priceSizeP || !priceSizeM || !priceSizeG) {
+        return Alert.alert(
+          'Cadastro',
+          'Informe o preço de todos os tamanhos da pizza.'
+        )
+      }
     }
+
     setIsLoading(true)
     const fileName = new Date().getTime()
     const storageRef = ref(storage, `/pizzas/${fileName}.png`)
@@ -163,7 +171,8 @@ export default function RegisterPizza() {
             g: priceSizeG
           },
           photo_url: photo_url,
-          photo_path: storageRef.fullPath
+          photo_path: storageRef.fullPath,
+          typeProduct
         })
           .then(() => {
             setIsLoading(false)
@@ -272,7 +281,7 @@ export default function RegisterPizza() {
         color="white"
       >
         <Heading size="md" color="white">
-          Cadastrar Pizza
+          Cadastrar Produto
         </Heading>
         {id && (
           <Box ml="4">
@@ -358,24 +367,91 @@ export default function RegisterPizza() {
               />
             </Stack>
           </Stack>
+          <Stack px="5" mb="6">
+            <Text>Tipo de Produto</Text>
+
+            <HStack w="100%" mt="2" space={4}>
+              <Pressable
+                w="20%"
+                h="12"
+                onPress={() => {
+                  setTypeProduct('Pizza')
+                }}
+              >
+                <Badge
+                  w="100%"
+                  h="100%"
+                  bg={typeProduct == 'Pizza' ? '#528F33' : 'gray.400'}
+                  borderRadius={'10'}
+                >
+                  <Text color="white">Pizza</Text>
+                </Badge>
+              </Pressable>
+              <Pressable
+                w="30%"
+                h="12"
+                onPress={() => {
+                  setTypeProduct('Sobremesa')
+                }}
+              >
+                <Badge
+                  w="100%"
+                  h="100%"
+                  bg={typeProduct == 'Sobremesa' ? '#528F33' : 'gray.400'}
+                  borderRadius={'10'}
+                >
+                  <Text color="white">Sobremesa</Text>
+                </Badge>
+              </Pressable>
+
+              <Pressable
+                w="23%"
+                h="12"
+                onPress={() => {
+                  setTypeProduct('Bebida')
+                }}
+              >
+                <Badge
+                  w="100%"
+                  h="100%"
+                  bg={typeProduct == 'Bebida' ? '#528F33' : 'gray.400'}
+                  borderRadius={'10'}
+                >
+                  <Text color="white">Bebida</Text>
+                </Badge>
+              </Pressable>
+            </HStack>
+          </Stack>
 
           <Stack px="5" space={2} paddingBottom={3}>
-            <Text>Tamanhos e Preços</Text>
-            <InputPrice
-              size="P"
-              onChangeText={setPriceSizeP}
-              value={priceSizeP}
-            />
-            <InputPrice
-              size="M"
-              onChangeText={setPriceSizeM}
-              value={priceSizeM}
-            />
-            <InputPrice
-              size="G"
-              onChangeText={setPriceSizeG}
-              value={priceSizeG}
-            />
+            {typeProduct === 'Pizza' ? (
+              <>
+                <Text>Tamanhos e Preços</Text>
+                <InputPrice
+                  size="P"
+                  onChangeText={setPriceSizeP}
+                  value={priceSizeP}
+                />
+                <InputPrice
+                  size="M"
+                  onChangeText={setPriceSizeM}
+                  value={priceSizeM}
+                />
+                <InputPrice
+                  size="G"
+                  onChangeText={setPriceSizeG}
+                  value={priceSizeG}
+                />
+              </>
+            ) : (
+              <>
+                <Text>Preço</Text>
+                <InputPriceUnique
+                  onChangeText={setUniquePrice}
+                  value={uniquePrice}
+                />
+              </>
+            )}
           </Stack>
         </FormControl>
         <Button
@@ -385,7 +461,7 @@ export default function RegisterPizza() {
           alignSelf={'center'}
           alignItems="center"
           h="7%"
-          marginBottom={'20px'}
+          marginBottom={'30px'}
           borderRadius="10"
           _pressed={{ bg: 'red.700', opacity: 0.6 }}
           onPress={id ? handleUpdate : handleAdd}

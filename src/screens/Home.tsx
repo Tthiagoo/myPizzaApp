@@ -92,7 +92,7 @@ export default function Home() {
           borderRadius="10"
           _pressed={{ bg: 'red.700', opacity: 0.6 }}
         >
-          Cadastrar Pizza
+          Cadastrar Produto
         </Button>
       )}
     </Box>

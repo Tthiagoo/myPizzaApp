@@ -27,6 +27,11 @@ export const Label = styled.Text`
   font-size: 14px;
 `
 
+export const LabelUnique = styled.Text`
+  font-size: 14px;
+  margin-left: 10px;
+`
+
 export const Input = styled(TextInput)`
   flex: 1;
   height: 100%;

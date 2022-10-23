@@ -1,10 +1,10 @@
 import React from 'react'
 import { TextInputProps } from 'react-native'
 
-import { Container, Size, Label, Input } from './styles'
+import { Container, Size, Label, Input, LabelUnique } from './styles'
 
 type Props = TextInputProps & {
-  size: string
+  size?: string
 }
 
 export function InputPrice({ size, ...rest }: Props) {
@@ -15,6 +15,16 @@ export function InputPrice({ size, ...rest }: Props) {
       </Size>
 
       <Label>R$</Label>
+
+      <Input keyboardType="numeric" {...rest} />
+    </Container>
+  )
+}
+
+export function InputPriceUnique({ ...rest }: Props) {
+  return (
+    <Container>
+      <LabelUnique>R$</LabelUnique>
 
       <Input keyboardType="numeric" {...rest} />
     </Container>

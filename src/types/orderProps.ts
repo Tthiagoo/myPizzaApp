@@ -14,4 +14,6 @@ export interface ProductProps {
     m: string
     g: string
   }
+  uniquePrice?: string
+  typeProduct?: string
 }
