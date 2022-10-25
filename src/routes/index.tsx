@@ -8,6 +8,7 @@ import PizzaOrder from '../screens/Order'
 import OrderDetail from '../screens/OrderDetail'
 import { useAuth } from '../context/auth'
 import { UserStackRoutes } from './stackRoutes'
+import RegisterUser from '../screens/RegisterUser'
 
 const { Navigator, Screen, Group } = createNativeStackNavigator()
 
@@ -19,7 +20,10 @@ export function Routes() {
         {user ? (
           <Screen name="Stack" component={UserStackRoutes} />
         ) : (
-          <Screen name="login" component={SignIn} />
+          <Group>
+            <Screen name="login" component={SignIn} />
+            <Screen name="RegisterUser" component={RegisterUser} />
+          </Group>
         )}
       </Navigator>
     </NavigationContainer>

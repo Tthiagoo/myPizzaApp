@@ -16,12 +16,18 @@ import { Heading } from 'native-base'
 
 import { useAuth } from '../context/auth'
 import AlertStatus from '../components/StatusAlert'
+import { useNavigation } from '@react-navigation/native'
+import { Alert } from 'react-native'
+import { sendPasswordResetEmail } from 'firebase/auth'
+import { auth } from '../config/firebase'
 export default function SignIn() {
+  const navigation = useNavigation()
   const [show, setShow] = React.useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const { signIn, user, isLogging, loadUserStorageData } = useAuth()
+  const { signIn, user, isLogging, loadUserStorageData, forgotPassword } =
+    useAuth()
 
   function handleSignIn() {
     signIn(email, password)
@@ -29,6 +35,13 @@ export default function SignIn() {
       .catch(error => {
         console.log(error)
       })
+  }
+  function handleForgotPassword() {
+    console.log('foi')
+    forgotPassword(auth, email)
+  }
+  function handleNavigation() {
+    navigation.navigate('RegisterUser')
   }
   useEffect(() => {
     loadUserStorageData()
@@ -98,8 +111,12 @@ export default function SignIn() {
         onChangeText={setPassword}
       />
       <HStack marginBottom={'10px'} justifyContent={'space-between'}>
-        <Text color="white">Cadastrar</Text>
-        <Text color="white">Esqueci Senha</Text>
+        <Text color="white" onPress={handleNavigation}>
+          Cadastrar
+        </Text>
+        <Text color="white" onPress={handleForgotPassword}>
+          Esqueci Senha
+        </Text>
       </HStack>
 
       <Button
@@ -112,7 +129,7 @@ export default function SignIn() {
           minHeight: 50,
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: '#eb5360',
+          backgroundColor: '#e73b49',
           flex: 1
         }}
       >

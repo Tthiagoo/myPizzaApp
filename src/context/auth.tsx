@@ -7,7 +7,12 @@ import React, {
 } from 'react'
 import { Alert } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { signInWithEmailAndPassword, signOut } from 'firebase/auth'
+import {
+  Auth,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signOut
+} from 'firebase/auth'
 import {
   collection,
   doc,
@@ -23,7 +28,6 @@ type User = {
   id: string
   name: string
   isAdmin: boolean
-  test: string
 }
 
 type AuthContextData = {
@@ -32,6 +36,7 @@ type AuthContextData = {
   isLogging: boolean
   loadUserStorageData: () => Promise<void>
   signOutAuth: () => Promise<void>
+  forgotPassword(auth: Auth, email: string): Promise<void>
 }
 
 type AuthProviderProps = {
@@ -48,27 +53,24 @@ function AuthProvider({ children }: AuthProviderProps) {
   const USER_COLLECTION = '@gopizza:users'
 
   const setUserData = async (uid: string) => {
-    const usersDocReference = query(userRef)
+    const usersDocReference = query(userRef, where('uid', '==', uid))
     const querySnapshot = await getDocs(usersDocReference)
     querySnapshot.forEach(async doc => {
-      if (doc.id.replace('}', '') === uid) {
-        const loggedUser = doc.data() as User
-        const newUser = {
-          id: doc.id,
-          name: loggedUser.name,
-          isAdmin: loggedUser.isAdmin,
-          test: loggedUser.test
-        }
-        setUser(newUser)
-
-        console.log(doc.id)
-        console.log(loggedUser.id)
-        console.log('loggedd')
-        console.log(newUser)
-        console.log(user)
-        await AsyncStorage.setItem(USER_COLLECTION, JSON.stringify(user))
-        console.log('colocou o user no storage ')
+      const loggedUser = doc.data() as User
+      const newUser = {
+        id: doc.id,
+        name: loggedUser.name,
+        isAdmin: loggedUser.isAdmin
       }
+      setUser(newUser)
+
+      console.log(doc.id)
+      console.log(loggedUser.id)
+      console.log('loggedd')
+      console.log(newUser)
+      console.log(user)
+      await AsyncStorage.setItem(USER_COLLECTION, JSON.stringify(user))
+      console.log('colocou o user no storage ')
     })
   }
 
@@ -134,6 +136,21 @@ function AuthProvider({ children }: AuthProviderProps) {
     await AsyncStorage.removeItem('@GoMarketplace:products')
     setUser(null)
   }
+  async function forgotPassword(auth: Auth, email: string) {
+    if (!email) {
+      return Alert.alert('Redefinir senha', 'Informe o email')
+    }
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+        Alert.alert(
+          'Redefinir senha',
+          'Enviamos um link no seu email para redefinir sua senha'
+        )
+      })
+      .catch(() => {
+        Alert.alert('Redefinir senha', 'Não foi possivel redefinir sua senha')
+      })
+  }
 
   return (
     <AuthContext.Provider
@@ -142,7 +159,8 @@ function AuthProvider({ children }: AuthProviderProps) {
         signIn,
         isLogging,
         loadUserStorageData,
-        signOutAuth
+        signOutAuth,
+        forgotPassword
       }}
     >
       {children}

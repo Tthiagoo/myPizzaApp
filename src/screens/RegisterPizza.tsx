@@ -172,7 +172,8 @@ export default function RegisterPizza() {
           },
           photo_url: photo_url,
           photo_path: storageRef.fullPath,
-          typeProduct
+          typeProduct,
+          uniquePrice
         })
           .then(() => {
             setIsLoading(false)

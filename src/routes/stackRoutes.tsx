@@ -8,6 +8,7 @@ import { UserTabRoutes } from './tabRoutes'
 import PizzaOrder from '../screens/Order'
 import OrderDetail from '../screens/OrderDetail'
 import RegisterPizza from '../screens/RegisterPizza'
+import RegisterUser from '../screens/RegisterUser'
 
 const { Navigator, Screen, Group } = createNativeStackNavigator()
 

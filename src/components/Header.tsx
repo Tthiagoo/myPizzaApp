@@ -5,7 +5,7 @@ import { TouchableOpacity } from 'react-native'
 import { useAuth } from '../context/auth'
 
 export default function Header() {
-  const { signOutAuth } = useAuth()
+  const { signOutAuth, user } = useAuth()
 
   return (
     <Box
@@ -21,7 +21,7 @@ export default function Header() {
         alignItems="center"
       >
         <Heading size={'md'} color="white">
-          Olá, Cliente
+          Olá, {user?.name}
         </Heading>
         <TouchableOpacity onPress={signOutAuth}>
           <Icon as={MaterialIcons} name="logout" color="white" size={'lg'} />

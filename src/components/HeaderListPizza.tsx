@@ -7,14 +7,19 @@ import {
   Text,
   VStack
 } from 'native-base'
-import React, { useState } from 'react'
+import React, { Dispatch, SetStateAction, useState } from 'react'
 
 type HeaderProps = {
   qntProd: number
+  setTypeProduct: Dispatch<SetStateAction<string>>
+  typeProduct: string
 }
 
-export default function HeaderListPizza({ qntProd }: HeaderProps) {
-  const [typeProduct, setTypeProduct] = useState('Pizza')
+export default function HeaderListPizza({
+  qntProd,
+  typeProduct,
+  setTypeProduct
+}: HeaderProps) {
   return (
     <>
       <HStack justifyContent={'space-between'} px="5%" py="4%">

@@ -38,7 +38,7 @@ export default function FormOrderPizza() {
   const [size, setSize] = useState('')
   const [quantity, setQuantity] = useState(0)
   const [pizza, setPizza] = useState<PizzaResponse>({} as PizzaResponse)
-  const { name, photo_url, id, description } = route.params
+  const { name, photo_url, id, description, typeProduct } = route.params
 
   const { addToCart } = useCart()
   const { user } = useAuth()
@@ -50,12 +50,28 @@ export default function FormOrderPizza() {
     )
   }
   console.log(quantity)
+  console.log(pizza)
+  function calcPriceAmout(): number {
+    if (typeProduct === 'Pizza') {
+      const amount = size ? pizza.prices_sizes[size] * quantity : 0
+      return amount
+    } else {
+      const amount = quantity * Number(pizza.uniquePrice)
+      return amount
+    }
+  }
 
-  const amount = size ? pizza.prices_sizes[size] * quantity : 0
-  const priceSize = size ? pizza.prices_sizes[size] : 0
+  function calcPriceSize(): number {
+    if (typeProduct === 'Pizza') {
+      const priceSize = size ? pizza.prices_sizes[size] : 0
+      return priceSize
+    } else {
+      return Number(pizza.uniquePrice)
+    }
+  }
 
   function handleAddToCart(item: ProductProps): void {
-    if (!size) {
+    if (typeProduct === 'Pizza' && !size) {
       return Alert.alert('Pedido', 'Selecione o tamanho da pizza.')
     }
 
@@ -72,7 +88,7 @@ export default function FormOrderPizza() {
     name,
     photo_url,
     quantidade: quantity,
-    price: priceSize,
+    price: calcPriceSize(),
     description
   }
 
@@ -82,46 +98,49 @@ export default function FormOrderPizza() {
 
   return (
     <>
-      <>
-        <Text>Selecione um tamanho</Text>
-        <Radio.Group
-          defaultValue="1"
-          name="myRadioGroup"
-          accessibilityLabel="Pick your favorite number"
-          value={size}
-          onChange={nextValue => {
-            setSize(nextValue)
-          }}
-        >
-          <HStack w="100%" mt="4%" space={4} justifyContent="space-between">
-            {PIZZA_TYPES.map(item => (
-              <Pressable
-                key={item.id}
-                display={'flex'}
-                flexDirection="column"
-                bgColor={size == item.id ? 'green.50' : 'white'}
-                flex="1"
-                p={'10px'}
-                justifyContent={'center'}
-                alignItems="center"
-                borderWidth={1}
-                borderRadius={'10px'}
-                borderColor={size == item.id ? 'green.500' : 'gray.300'}
-                onPress={() => {
-                  setSize(item.id)
-                }}
-              >
-                <Radio
-                  value={item.id}
-                  colorScheme="green"
-                  accessibilityLabel="Radio"
-                />
-                <Text fontWeight={'bold'}>{item.name}</Text>
-              </Pressable>
-            ))}
-          </HStack>
-        </Radio.Group>
-      </>
+      {typeProduct === 'Pizza' && (
+        <>
+          <Text>Selecione um tamanho</Text>
+          <Radio.Group
+            defaultValue="1"
+            name="myRadioGroup"
+            accessibilityLabel="Pick your favorite number"
+            value={size}
+            onChange={nextValue => {
+              setSize(nextValue)
+            }}
+          >
+            <HStack w="100%" mt="4%" space={4} justifyContent="space-between">
+              {PIZZA_TYPES.map(item => (
+                <Pressable
+                  key={item.id}
+                  display={'flex'}
+                  flexDirection="column"
+                  bgColor={size == item.id ? 'green.50' : 'white'}
+                  flex="1"
+                  p={'10px'}
+                  justifyContent={'center'}
+                  alignItems="center"
+                  borderWidth={1}
+                  borderRadius={'10px'}
+                  borderColor={size == item.id ? 'green.500' : 'gray.300'}
+                  onPress={() => {
+                    setSize(item.id)
+                  }}
+                >
+                  <Radio
+                    value={item.id}
+                    colorScheme="green"
+                    accessibilityLabel="Radio"
+                  />
+                  <Text fontWeight={'bold'}>{item.name}</Text>
+                </Pressable>
+              ))}
+            </HStack>
+          </Radio.Group>
+        </>
+      )}
+
       <>
         <HStack w="100%" mt="3" space={6}>
           <Flex w="25%">
@@ -144,38 +163,41 @@ export default function FormOrderPizza() {
               _focus={{ backgroundColor: '#fff' }}
             />
           </Flex>
-          <Flex flex="1">
-            <FormControl.Label>
-              <Text>Meio Sabor?</Text>
-            </FormControl.Label>
-            <Select
-              selectedValue={service}
-              borderRadius={'10px'}
-              bg="white"
-              variant={'unstyled'}
-              borderColor="gray.300"
-              borderWidth={'1'}
-              p="1.3rem"
-              fontSize={'md'}
-              w="100%"
-              _selectedItem={{
-                bg: 'green.200'
-              }}
-              onValueChange={itemValue => setService(itemValue)}
-            >
-              <Select.Item label="Não" value="none" />
-              <Select.Item label="Bauru = R$45" value="ux" />
-              <Select.Item label="Frango C/Queijo = R$45" value="web" />
 
-              <Select.Item label="Portuguesa = R$45" value="uxx" />
+          {typeProduct === 'Pizza' && (
+            <Flex flex="1">
+              <FormControl.Label>
+                <Text>Meio Sabor?</Text>
+              </FormControl.Label>
+              <Select
+                selectedValue={service}
+                borderRadius={'10px'}
+                bg="white"
+                variant={'unstyled'}
+                borderColor="gray.300"
+                borderWidth={'1'}
+                p="1.3rem"
+                fontSize={'md'}
+                w="100%"
+                _selectedItem={{
+                  bg: 'green.200'
+                }}
+                onValueChange={itemValue => setService(itemValue)}
+              >
+                <Select.Item label="Não" value="none" />
+                <Select.Item label="Bauru = R$45" value="ux" />
+                <Select.Item label="Frango C/Queijo = R$45" value="web" />
 
-              <Select.Item label="Calabresa = R$45" value="cross" />
-              <Select.Item label="Mussarela = R$45" value="ui" />
-              <Select.Item label="4 Queijos = R$45" value="backend" />
-            </Select>
-          </Flex>
+                <Select.Item label="Portuguesa = R$45" value="uxx" />
+
+                <Select.Item label="Calabresa = R$45" value="cross" />
+                <Select.Item label="Mussarela = R$45" value="ui" />
+                <Select.Item label="4 Queijos = R$45" value="backend" />
+              </Select>
+            </Flex>
+          )}
         </HStack>
-        <Text mt="5">Total: R$ {amount}</Text>
+        <Text mt="5">Total: R$ {calcPriceAmout()}</Text>
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => {

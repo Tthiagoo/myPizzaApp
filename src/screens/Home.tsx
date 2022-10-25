@@ -14,7 +14,8 @@ import {
   orderBy,
   startAt,
   endAt,
-  getDocs
+  getDocs,
+  where
 } from 'firebase/firestore'
 import { db } from '../config/firebase'
 import { ProductProps } from '../types/product'
@@ -23,6 +24,7 @@ import { useCartContext } from '../context/cartContext'
 
 export default function Home() {
   const [search, setSearch] = useState('')
+  const [typeProducts, setTypeProducts] = useState('Pizza')
   const [products, setProducts] = useState<ProductProps[]>([])
   type RootStackParamList = {
     RegisterPizza: { isAdd: boolean }
@@ -35,22 +37,12 @@ export default function Home() {
     navigation.navigate('RegisterPizza', { isAdd: true })
   }
 
-  async function removeItemValue() {
-    try {
-      console.log('foi')
-      await AsyncStorage.removeItem('@gopizza:product')
-      await AsyncStorage.removeItem('@gopizza:users')
-      await AsyncStorage.removeItem('@GoMarketplace:products')
-      return true
-    } catch (exception) {
-      return false
-    }
-  }
   async function getMenuPizza(value: string) {
     const formattedValue = value.toLocaleLowerCase().trim()
     const userRef = collection(db, 'Pizzas')
     const usersDocReference = query(
       userRef,
+      where('typeProduct', '==', typeProducts),
       orderBy('name_insensitive'),
       startAt(formattedValue),
       endAt(`${formattedValue}\uf8ff`)
@@ -72,13 +64,17 @@ export default function Home() {
   useFocusEffect(
     useCallback(() => {
       getMenuPizza('')
-    }, [])
+    }, [typeProducts])
   )
   return (
     <Box flex={1} bg="light.200">
       <Header />
       <Search onChangeText={setSearch} value={search} onSearch={handleSearch} />
-      <HeaderListPizza qntProd={products.length} />
+      <HeaderListPizza
+        typeProduct={typeProducts}
+        setTypeProduct={setTypeProducts}
+        qntProd={products.length}
+      />
       <MenuPizza products={products} />
       {user?.isAdmin && (
         <Button
