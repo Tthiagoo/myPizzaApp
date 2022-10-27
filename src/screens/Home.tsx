@@ -18,9 +18,7 @@ import {
   where
 } from 'firebase/firestore'
 import { db } from '../config/firebase'
-import { ProductProps } from '../types/product'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useCartContext } from '../context/cartContext'
+import { ProductProps } from '../types/orderProps'
 
 export default function Home() {
   const [search, setSearch] = useState('')

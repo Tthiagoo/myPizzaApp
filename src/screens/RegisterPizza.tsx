@@ -63,17 +63,15 @@ export default function RegisterPizza() {
   const [isLoading, setIsLoading] = useState(false)
 
   async function handlePickerImage() {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
+    //const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
 
-    if (status === 'granted') {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        aspect: [4, 4]
-      })
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      aspect: [4, 4]
+    })
 
-      if (!result.cancelled) {
-        setImage(result.uri)
-      }
+    if (!result.cancelled) {
+      setImage(result.uri)
     }
   }
 

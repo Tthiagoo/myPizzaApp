@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native'
-import { Button, Flex, Heading, HStack, Input, VStack, Text } from 'native-base'
+import { Button, Flex, Heading, HStack, VStack, Text } from 'native-base'
 import React, { useState } from 'react'
 import {
   signInWithEmailAndPassword,
@@ -9,6 +9,7 @@ import {
 import { auth, db } from '../config/firebase'
 import { addDoc, collection } from 'firebase/firestore'
 import { Alert } from 'react-native'
+import Input from '../components/InputForm'
 
 export default function RegisterUser() {
   const [name, setName] = useState('')
@@ -24,6 +25,28 @@ export default function RegisterUser() {
   const userRef = collection(db, 'Users')
 
   const handleUserRegistration = async () => {
+    if (!name.trim()) {
+      return Alert.alert('Cadastro', 'Informe o seu da nome.')
+    }
+
+    if (!email.trim()) {
+      return Alert.alert('Cadastro', 'Informe o seu e-mail')
+    }
+
+    if (!password) {
+      return Alert.alert('Cadastro', 'Informe a sua senha')
+    }
+    if (!cpf.trim()) {
+      return Alert.alert('Cadastro', 'Informe o seu CPF')
+    }
+    if (!apto.trim()) {
+      return Alert.alert('Cadastro', 'Informe o seu apartamento.')
+    }
+
+    if (!bloco) {
+      return Alert.alert('Cadastro', 'Informe o seu bloco')
+    }
+
     try {
       setLoading(true)
       const res = await createUserWithEmailAndPassword(auth, email, password)
@@ -63,75 +86,13 @@ export default function RegisterUser() {
     >
       <Heading color="white">Faça seu cadastro</Heading>
       <VStack w="100%" mt="5" space={3}>
-        <Input
-          placeholderTextColor={'white'}
-          color="muted.50"
-          size="md"
-          placeholder="Nome"
-          marginBottom={'5%'}
-          borderColor="light.100"
-          borderWidth={'0.3'}
-          variant="unstyled"
-          onChangeText={setName}
-        />
-        <Input
-          placeholderTextColor={'white'}
-          color="muted.50"
-          size="md"
-          placeholder="E-mail"
-          marginBottom={'5%'}
-          borderColor="light.100"
-          borderWidth={'0.3'}
-          variant="unstyled"
-          onChangeText={setEmail}
-        />
-        <Input
-          placeholderTextColor={'white'}
-          color="muted.50"
-          size="md"
-          placeholder="Senha"
-          marginBottom={'5%'}
-          borderColor="light.100"
-          borderWidth={'0.3'}
-          variant="unstyled"
-          onChangeText={setPassword}
-        />
-        <Input
-          placeholderTextColor={'white'}
-          color="muted.50"
-          size="md"
-          placeholder="CPF"
-          marginBottom={'5%'}
-          borderColor="light.100"
-          borderWidth={'0.3'}
-          variant="unstyled"
-          onChangeText={setCpf}
-        />
+        <Input onChangeText={setName} placeholder="Nome" />
+        <Input placeholder="E-mail" onChangeText={setEmail} />
+        <Input placeholder="Senha" onChangeText={setPassword} />
+        <Input placeholder="CPF" onChangeText={setCpf} />
         <HStack w="100%" space={3} paddingX="1" justifyContent="center">
-          <Input
-            placeholderTextColor={'white'}
-            color="muted.50"
-            size="md"
-            w="50%"
-            placeholder="APTO"
-            marginBottom={'5%'}
-            borderColor="light.100"
-            borderWidth={'0.3'}
-            variant="unstyled"
-            onChangeText={setApto}
-          />
-          <Input
-            placeholderTextColor={'white'}
-            color="muted.50"
-            size="md"
-            w="50%"
-            placeholder="Bloco"
-            marginBottom={'5%'}
-            borderColor="light.100"
-            borderWidth={'0.3'}
-            variant="unstyled"
-            onChangeText={setBloco}
-          />
+          <Input w="50%" placeholder="APTO" onChangeText={setApto} />
+          <Input w="50%" placeholder="Bloco" onChangeText={setBloco} />
         </HStack>
         <Button
           onPress={handleUserRegistration}

@@ -5,7 +5,8 @@ import { FlatList, Text } from 'native-base'
 import React from 'react'
 
 import { useAuth } from '../context/auth'
-import { ProductProps } from '../types/product'
+import { ProductProps } from '../types/orderProps'
+
 import ItemPizza from './ItemPizza'
 
 export type RootStackParamList = {

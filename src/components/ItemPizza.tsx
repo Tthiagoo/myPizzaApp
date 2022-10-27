@@ -6,19 +6,8 @@ import {
   TouchableOpacity,
   ImageSourcePropType
 } from 'react-native'
+import { ProductProps } from '../types/orderProps'
 
-interface ProductProps {
-  id: string
-  photo_url: string
-  name: string
-  description: string
-  isAdd?: boolean
-  prices_sizes: {
-    p: string
-    m: string
-    g: string
-  }
-}
 type Props = TouchableOpacityProps & {
   data: ProductProps
 }

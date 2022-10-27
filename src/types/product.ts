@@ -9,4 +9,5 @@ export type ProductProps = {
     m: string
     g: string
   }
+  uniquePice?: string
 }
