@@ -30,16 +30,13 @@ export default function Carrinho() {
 
     return total
   }, [data])
-
+ 
   const date = new Date().getDate()
 
   const month = new Date().getMonth() + 1
 
   const hours = new Date().getHours() //Current Hours
   const min = new Date().getMinutes()
-
-  console.log('data')
-  console.log(data)
 
   async function handleAddOrder() {
     setLoading(true)

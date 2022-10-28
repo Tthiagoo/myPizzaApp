@@ -37,7 +37,7 @@ export default function OrderHistory() {
     const dataProducts = querySnapshot.docs.map(doc => {
       return doc.data()
     }) as HistoryProps[]
-    console.log(dataProducts)
+
     setHistory(dataProducts)
   }
 

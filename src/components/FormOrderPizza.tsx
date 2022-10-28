@@ -34,14 +34,14 @@ type PizzaResponse = ProductProps & {
 export default function FormOrderPizza() {
   const route = useRoute<RouteProp<RootStackParamList, 'order'>>()
   const navigation = useNavigation()
-  const [service, setService] = React.useState('none')
+  const [service, setService] = useState('')
   const [size, setSize] = useState('')
   const [quantity, setQuantity] = useState(0)
+  const [calcHalf, setCalcHalf] = useState(0)
   const [pizza, setPizza] = useState<PizzaResponse>({} as PizzaResponse)
   const { name, photo_url, id, description, typeProduct } = route.params
 
   const { addToCart } = useCart()
-  const { user } = useAuth()
 
   const pizzaRef = doc(db, 'Pizzas', id)
   async function getPizzaInfo() {
@@ -49,10 +49,14 @@ export default function FormOrderPizza() {
       setPizza(response.data() as PizzaResponse)
     )
   }
-  console.log(quantity)
-  console.log(pizza)
+
   function calcPriceAmout(): number {
     if (typeProduct === 'Pizza') {
+      if (service) {
+        const priceSize = calcHalf ? calcHalf * quantity : 0
+
+        return priceSize
+      }
       const amount = size ? pizza.prices_sizes[size] * quantity : 0
       return amount
     } else {
@@ -63,11 +67,27 @@ export default function FormOrderPizza() {
 
   function calcPriceSize(): number {
     if (typeProduct === 'Pizza') {
+      if (service) {
+        const priceSize = calcHalf
+        return priceSize
+      }
       const priceSize = size ? pizza.prices_sizes[size] : 0
       return priceSize
     } else {
       return Number(pizza.uniquePrice)
     }
+  }
+
+  function calcHalfPizza(price: string) {
+    if (price) {
+      setService(price)
+      const removeId = price.split('.').pop()
+      setCalcHalf(Number(removeId))
+
+      return Number(removeId)
+    }
+    setService('')
+    return
   }
 
   function handleAddToCart(item: ProductProps): void {
@@ -89,7 +109,8 @@ export default function FormOrderPizza() {
     photo_url,
     quantidade: quantity,
     price: calcPriceSize(),
-    description
+    description,
+    uniquePrice: calcHalf
   }
 
   useEffect(() => {
@@ -182,17 +203,15 @@ export default function FormOrderPizza() {
                 _selectedItem={{
                   bg: 'green.200'
                 }}
-                onValueChange={itemValue => setService(itemValue)}
+                onValueChange={itemValue => calcHalfPizza(itemValue)}
               >
-                <Select.Item label="Não" value="none" />
-                <Select.Item label="Bauru = R$45" value="ux" />
-                <Select.Item label="Frango C/Queijo = R$45" value="web" />
-
-                <Select.Item label="Portuguesa = R$45" value="uxx" />
-
-                <Select.Item label="Calabresa = R$45" value="cross" />
-                <Select.Item label="Mussarela = R$45" value="ui" />
-                <Select.Item label="4 Queijos = R$45" value="backend" />
+                <Select.Item label="Não" value="" />
+                <Select.Item label="Bauru = R$30" value="1.30" />
+                <Select.Item label="Frango C/Queijo = R$35" value="2.35" />
+                <Select.Item label="Portuguesa = R$40" value="3.40" />
+                <Select.Item label="Calabresa = R$40" value="4.40" />
+                <Select.Item label="Mussarela = R$40" value="5.40" />
+                <Select.Item label="4 Queijos = R$40" value="6.40" />
               </Select>
             </Flex>
           )}

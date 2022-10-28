@@ -27,16 +27,6 @@ export default function App() {
     DMSerifDisplay_400Regular
   })
 
-  /*const [tasks, setTaks] = useState([])
-  useEffect(() => {
-    async function getData() {
-      const querySnapshot = await getDocs(collection(db, 'Tasks'))
-      const newArray = querySnapshot.forEach(doc => {
-        console.log(`${doc.id} => ${doc.data()}`)
-      })
-    }
-    getData()
-  }, [])*/
   return (
     <NativeBaseProvider config={config} theme={theme}>
       <AuthProvider>

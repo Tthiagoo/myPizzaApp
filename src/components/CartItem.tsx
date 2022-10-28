@@ -30,33 +30,20 @@ export default function CartItem({ index, data, ...rest }: Props) {
   const { increment, decrement, data: products, remove } = useCart()
 
   function handleIncrement(id: string): void {
-    console.log(id)
     increment(id)
+    console.log(products)
   }
 
   function handleDecrement(id: string): void {
-    console.log(id)
     decrement(id)
-    console.log(data.quantidade)
+
     if (data.quantidade < 2) {
-      console.log('foi')
       return remove(id)
     }
   }
   function handleRemove(id: string): void {
-    console.log(id)
     remove(id)
   }
-
-  const cartTotal = useMemo(() => {
-    const total = products.reduce((accumulator, product) => {
-      const productSubTotal = product.price * product.quantidade
-
-      return accumulator + productSubTotal
-    }, 0)
-
-    return total
-  }, [products])
 
   /*const RenderRight = (progress, dragX) => {
     const scale = dragX.interpolate({

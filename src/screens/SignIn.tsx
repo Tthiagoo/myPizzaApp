@@ -37,7 +37,6 @@ export default function SignIn() {
       })
   }
   function handleForgotPassword() {
-    console.log('foi')
     forgotPassword(auth, email)
   }
   function handleNavigation() {

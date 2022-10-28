@@ -30,7 +30,7 @@ export default function OrderCard({
   function handleOpen() {
     navigation.navigate('orderDetail', { itemList, priceTotal })
   }
-  console.log(lenghtArrayHistory)
+
   return (
     <TouchableOpacity
       style={lenghtArrayHistory === 1 ? { width: '100%' } : { width: '50%' }}

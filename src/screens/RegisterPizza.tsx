@@ -189,8 +189,6 @@ export default function RegisterPizza() {
         // download url
       }
     )
-
-    console.log('chegou aqui')
   }
 
   async function handleUpdate() {
@@ -260,8 +258,6 @@ export default function RegisterPizza() {
         // download url
       }
     )
-
-    console.log('chegou aqui')
   }
 
   return (

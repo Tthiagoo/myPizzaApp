@@ -25,9 +25,6 @@ export default function OrderDetail() {
   const { reseteCart } = useCart()
   const route = useRoute<RouteProp<RootStackParamList, 'orderDetail'>>()
 
-  console.log('route list')
-  console.log(route.params.itemList)
-
   const date = new Date().getDate()
 
   const month = new Date().getMonth() + 1
