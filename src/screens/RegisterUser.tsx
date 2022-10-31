@@ -9,7 +9,8 @@ import {
   HStack,
   VStack,
   Text,
-  FormControl
+  FormControl,
+  Select
 } from 'native-base'
 import React, { useState } from 'react'
 import {
@@ -25,7 +26,7 @@ import { useForm, Controller } from 'react-hook-form'
 
 export default function RegisterUser() {
   const [loading, setLoading] = useState(Boolean)
-
+  const [blocoUser, setBloco] = useState('1')
   const navigation = useNavigation()
   const userRef = collection(db, 'Users')
 
@@ -49,8 +50,7 @@ export default function RegisterUser() {
       .min(11, 'Informe um cpf valido')
       .max(11, 'Informe um cpf valido')
       .matches(/^[0-9]+$/, 'Somente numeros'),
-    apto: yup.string().required('Obrigatorio'),
-    bloco: yup.string().required('Obrigatorio')
+    apto: yup.string().required('Obrigatorio')
   })
 
   const {
@@ -66,7 +66,7 @@ export default function RegisterUser() {
     const querySnapshot = await getDocs(usersDocReference)
     const result = querySnapshot.docs.map(doc => doc.data())
 
-    const findBloco = result.filter(({ bloco }) => bloco === data.bloco)
+    const findBloco = result.filter(({ bloco }) => bloco === blocoUser)
     return findBloco
   }
 
@@ -85,7 +85,7 @@ export default function RegisterUser() {
     if (result?.length == 5) {
       console.log(result?.length)
       console.log(result)
-      Alert.alert('Cadastro', 'Limite de 5 CPF por apto atingido')
+      Alert.alert('Cadastro', 'Limite de 5 CPF por apartamento atingido')
       return
     }
     try {
@@ -101,7 +101,7 @@ export default function RegisterUser() {
         name: data.name,
         email: data.email,
         apto: data.apto,
-        bloco: data.bloco,
+        bloco: blocoUser,
         cpf: data.cpf
       }).then(() => {
         setLoading(false)
@@ -109,7 +109,7 @@ export default function RegisterUser() {
       })
     } catch (err) {
       setLoading(false)
-      Alert.alert(String(err))
+      Alert.alert('Cadastro', 'Email já em uso')
     }
   }
   return (
@@ -190,18 +190,28 @@ export default function RegisterUser() {
                 />
               )}
             />
-            <Controller
-              control={control}
-              name="bloco"
-              render={({ field: { onChange } }) => (
-                <Input
-                  onChangeText={onChange}
-                  errorMessage={errors.bloco?.message}
-                  w="50%"
-                  placeholder="Bloco"
-                />
-              )}
-            />
+
+            <Select
+              selectedValue={blocoUser}
+              variant={'unstyled'}
+              borderWidth={'0.3'}
+              borderColor="light.100"
+              size="md"
+              color="white"
+              w="140px"
+              _selectedItem={{
+                bg: 'green.200'
+              }}
+              onValueChange={itemValue => setBloco(itemValue)}
+            >
+              <Select.Item label="Bloco 1" value="1" />
+              <Select.Item label="Bloco 2" value="2" />
+              <Select.Item label="Bloco 3" value="3" />
+              <Select.Item label="Bloco 4" value="4" />
+              <Select.Item label="Bloco 5" value="5" />
+              <Select.Item label="Bloco 6" value="6" />
+              <Select.Item label="Bloco 7" value="7" />
+            </Select>
           </HStack>
           <Button
             onPress={handleSubmit(handleUserRegistration)}
