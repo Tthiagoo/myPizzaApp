@@ -18,7 +18,7 @@ import {
   createUserWithEmailAndPassword
 } from 'firebase/auth'
 import { auth, db } from '../config/firebase'
-import { addDoc, collection } from 'firebase/firestore'
+import { addDoc, collection, getDocs, query, where } from 'firebase/firestore'
 import { Alert } from 'react-native'
 import Input from '../components/InputForm'
 import { useForm, Controller } from 'react-hook-form'
@@ -35,7 +35,10 @@ export default function RegisterUser() {
       .required('Informe um nome')
       .min(4, 'Minimo de 4 digitos')
       .matches(/^[aA-zZ\s]+$/, 'Somente letras é aceito'),
-    password: yup.string().required('Informe uma senha'),
+    password: yup
+      .string()
+      .required('Informe uma senha')
+      .min(6, 'Senha minimo de 6 digitos'),
     email: yup
       .string()
       .required('Informe um e-mail')
@@ -44,9 +47,10 @@ export default function RegisterUser() {
       .string()
       .required('Informe um cpf')
       .min(11, 'Informe um cpf valido')
+      .max(11, 'Informe um cpf valido')
       .matches(/^[0-9]+$/, 'Somente numeros'),
-    apto: yup.string().required('Informe um apto'),
-    bloco: yup.number().required('Informe um bloco')
+    apto: yup.string().required('Obrigatorio'),
+    bloco: yup.string().required('Obrigatorio')
   })
 
   const {
@@ -57,7 +61,33 @@ export default function RegisterUser() {
 
   type schemaTypeValidation = yup.InferType<typeof schema>
 
+  async function getUserApto(data: schemaTypeValidation) {
+    const usersDocReference = query(userRef, where('apto', '==', data.apto))
+    const querySnapshot = await getDocs(usersDocReference)
+    const result = querySnapshot.docs.map(doc => doc.data())
+
+    const findBloco = result.filter(({ bloco }) => bloco === data.bloco)
+    return findBloco
+  }
+
   const handleUserRegistration = async (data: schemaTypeValidation) => {
+    const result = await getUserApto(data)
+
+    const findCpf = result.find(({ cpf }) => cpf === data.cpf)
+    if (findCpf) {
+      console.log(data.cpf)
+      console.log('findCpf')
+      console.log(findCpf)
+      Alert.alert('Cadastro', 'CPF ja cadastrado')
+      return
+    }
+
+    if (result?.length == 5) {
+      console.log(result?.length)
+      console.log(result)
+      Alert.alert('Cadastro', 'Limite de 5 CPF por apto atingido')
+      return
+    }
     try {
       setLoading(true)
       const res = await createUserWithEmailAndPassword(
@@ -76,7 +106,6 @@ export default function RegisterUser() {
       }).then(() => {
         setLoading(false)
         Alert.alert('Cadastro', 'Cadastro concluido com sucesso')
-        navigation.navigate('login')
       })
     } catch (err) {
       setLoading(false)
@@ -140,6 +169,7 @@ export default function RegisterUser() {
             name="cpf"
             render={({ field: { onChange } }) => (
               <Input
+                keyboardType="numeric"
                 onChangeText={onChange}
                 errorMessage={errors.cpf?.message}
                 placeholder="CPF"
