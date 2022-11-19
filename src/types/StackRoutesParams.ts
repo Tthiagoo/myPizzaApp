@@ -5,6 +5,7 @@ export type RootStackParamList = {
   order: ProductProps
   RegisterPizza: { isAdd: boolean; PizzaProps: ProductProps }
   orderDetail: { itemList: ProductProps[]; priceTotal: number }
+  RegisterUser: { isNewUser: boolean }
 }
 
 export type RootRouteProps<RouteName extends keyof RootStackParamList> =
