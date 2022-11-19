@@ -18,7 +18,10 @@ export function Routes() {
     <NavigationContainer>
       <Navigator screenOptions={{ headerShown: false }}>
         {user ? (
-          <Screen name="Stack" component={UserStackRoutes} />
+          <Group>
+            <Screen name="Stack" component={UserStackRoutes} />
+            <Screen name="RegisterUser" component={RegisterUser} />
+          </Group>
         ) : (
           <Group>
             <Screen name="login" component={SignIn} />

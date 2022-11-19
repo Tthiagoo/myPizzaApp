@@ -1,14 +1,12 @@
 import { StatusBar } from 'expo-status-bar'
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
-import AppLoading from 'expo-app-loading'
+
 import { NativeBaseProvider, Box } from 'native-base'
 import { useFonts, DMSans_400Regular } from '@expo-google-fonts/dm-sans'
 import { DMSerifDisplay_400Regular } from '@expo-google-fonts/dm-serif-display'
-import { getDocs, collection } from 'firebase/firestore'
-import { db } from './src/config/firebase'
+
 import { Routes } from './src/routes'
-import { SafeAreaView } from 'react-native-safe-area-context'
+
 import { LinearGradient } from 'expo-linear-gradient'
 import { theme } from './src/theme/customTheme'
 import { Loading } from './src/components/Loading'
