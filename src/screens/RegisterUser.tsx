@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/native'
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 
@@ -12,52 +12,48 @@ import {
   FormControl,
   Select
 } from 'native-base'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   signInWithEmailAndPassword,
   signOut,
   createUserWithEmailAndPassword
 } from 'firebase/auth'
 import { auth, db } from '../config/firebase'
-import { addDoc, collection, getDocs, query, where } from 'firebase/firestore'
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where
+} from 'firebase/firestore'
 import { Alert } from 'react-native'
 import Input from '../components/InputForm'
 import { useForm, Controller } from 'react-hook-form'
+import { schema } from '../schemas/yupSchema'
+import { RootStackParamList } from '../types/StackRoutesParams'
+import { useAuth } from '../context/auth'
 
 export default function RegisterUser() {
   const [loading, setLoading] = useState(Boolean)
   const [blocoUser, setBloco] = useState('1')
-  const navigation = useNavigation()
+
+  const route = useRoute<RouteProp<RootStackParamList, 'RegisterUser'>>()
+  const { isNewUser } = route.params
+  const { user } = useAuth()
   const userRef = collection(db, 'Users')
-
-  const schema = yup.object({
-    name: yup
-      .string()
-      .required('Informe um nome')
-      .min(4, 'Minimo de 4 digitos')
-      .matches(/^[aA-zZ\s]+$/, 'Somente letras é aceito'),
-    password: yup
-      .string()
-      .required('Informe uma senha')
-      .min(6, 'Senha minimo de 6 digitos'),
-    email: yup
-      .string()
-      .required('Informe um e-mail')
-      .email('Digite um email valido'),
-    cpf: yup
-      .string()
-      .required('Informe um cpf')
-      .min(11, 'Informe um cpf valido')
-      .max(11, 'Informe um cpf valido')
-      .matches(/^[0-9]+$/, 'Somente numeros'),
-    apto: yup.string().required('Obrigatorio')
-  })
-
+  console.log('user vindo do context do register', user)
   const {
     handleSubmit,
     control,
-    formState: { errors }
-  } = useForm<schemaTypeValidation>({ resolver: yupResolver(schema) })
+    formState: { errors },
+    setValue,
+    reset
+  } = useForm<schemaTypeValidation>({
+    resolver: yupResolver(schema),
+    shouldUnregister: false
+  })
 
   type schemaTypeValidation = yup.InferType<typeof schema>
 
@@ -75,19 +71,15 @@ export default function RegisterUser() {
 
     const findCpf = result.find(({ cpf }) => cpf === data.cpf)
     if (findCpf) {
-      console.log(data.cpf)
-      console.log('findCpf')
-      console.log(findCpf)
       Alert.alert('Cadastro', 'CPF ja cadastrado')
       return
     }
 
     if (result?.length == 5) {
-      console.log(result?.length)
-      console.log(result)
       Alert.alert('Cadastro', 'Limite de 5 CPF por apartamento atingido')
       return
     }
+
     try {
       setLoading(true)
       const res = await createUserWithEmailAndPassword(
@@ -112,6 +104,7 @@ export default function RegisterUser() {
       Alert.alert('Cadastro', 'Email já em uso')
     }
   }
+
   return (
     <Flex
       flex={1}
@@ -127,7 +120,9 @@ export default function RegisterUser() {
       alignItems="center"
       justifyContent="center"
     >
-      <Heading color="white">Faça seu cadastro</Heading>
+      <Heading color="white">
+        {isNewUser ? 'Faça seu cadastro' : 'Altere seus dados'}
+      </Heading>
 
       <FormControl>
         <VStack w="100%" mt="5" space={3}>
@@ -136,6 +131,7 @@ export default function RegisterUser() {
             name="name"
             render={({ field: { onChange } }) => (
               <Input
+                defaultValue={user?.name}
                 onChangeText={onChange}
                 errorMessage={errors.name?.message}
                 placeholder="Nome"
@@ -148,6 +144,8 @@ export default function RegisterUser() {
             render={({ field: { onChange } }) => (
               <Input
                 onChangeText={onChange}
+                isDisabled={user?.email ? true : false}
+                defaultValue={user?.email}
                 errorMessage={errors.email?.message}
                 placeholder="E-mail"
               />
@@ -159,8 +157,9 @@ export default function RegisterUser() {
             render={({ field: { onChange } }) => (
               <Input
                 onChangeText={onChange}
+                isDisabled={user?.email ? true : false}
                 errorMessage={errors.password?.message}
-                placeholder="Senha"
+                placeholder={'**************'}
               />
             )}
           />
@@ -171,6 +170,7 @@ export default function RegisterUser() {
               <Input
                 keyboardType="numeric"
                 onChangeText={onChange}
+                defaultValue={user?.cpf}
                 errorMessage={errors.cpf?.message}
                 placeholder="CPF"
               />
@@ -183,7 +183,9 @@ export default function RegisterUser() {
               name="apto"
               render={({ field: { onChange } }) => (
                 <Input
+                  keyboardType="numeric"
                   onChangeText={onChange}
+                  defaultValue={user?.apto}
                   errorMessage={errors.apto?.message}
                   w="50%"
                   placeholder="APTO"
@@ -198,6 +200,7 @@ export default function RegisterUser() {
               borderColor="light.100"
               size="md"
               color="white"
+              defaultValue={user?.bloco}
               w="140px"
               _selectedItem={{
                 bg: 'green.200'

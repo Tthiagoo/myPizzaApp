@@ -24,11 +24,7 @@ import {
 
 import { auth } from '../config/firebase'
 import { db } from '../config/firebase'
-type User = {
-  id: string
-  name: string
-  isAdmin: boolean
-}
+import { User } from '../types/auth'
 
 type AuthContextData = {
   signIn: (email: string, password: string) => Promise<void>
@@ -57,19 +53,14 @@ function AuthProvider({ children }: AuthProviderProps) {
     const querySnapshot = await getDocs(usersDocReference)
     querySnapshot.forEach(async doc => {
       const loggedUser = doc.data() as User
-      const newUser = {
-        id: doc.id,
-        name: loggedUser.name,
-        isAdmin: loggedUser.isAdmin
-      }
-      setUser(newUser)
 
-      console.log(doc.id)
-      console.log(loggedUser.id)
+      setUser(loggedUser)
+
+      console.log('dados vindo do context', loggedUser)
       console.log('loggedd')
-      console.log(newUser)
+
       console.log(user)
-      await AsyncStorage.setItem(USER_COLLECTION, JSON.stringify(user))
+      await AsyncStorage.setItem(USER_COLLECTION, JSON.stringify(loggedUser))
       console.log('colocou o user no storage ')
     })
   }

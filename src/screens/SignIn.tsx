@@ -15,19 +15,24 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { Heading } from 'native-base'
 
 import { useAuth } from '../context/auth'
-import AlertStatus from '../components/StatusAlert'
+
 import { useNavigation } from '@react-navigation/native'
-import { Alert } from 'react-native'
-import { sendPasswordResetEmail } from 'firebase/auth'
+
 import { auth } from '../config/firebase'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { RootStackParamList } from '../types/StackRoutesParams'
 export default function SignIn() {
-  const navigation = useNavigation()
   const [show, setShow] = React.useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const { signIn, user, isLogging, loadUserStorageData, forgotPassword } =
-    useAuth()
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>()
+  function navigateToRegister() {
+    navigation.navigate('RegisterUser', { isNewUser: true })
+  }
+
+  const { signIn, isLogging, loadUserStorageData, forgotPassword } = useAuth()
 
   function handleSignIn() {
     signIn(email, password)
@@ -39,9 +44,7 @@ export default function SignIn() {
   function handleForgotPassword() {
     forgotPassword(auth, email)
   }
-  function handleNavigation() {
-    navigation.navigate('RegisterUser')
-  }
+
   useEffect(() => {
     loadUserStorageData()
   }, [])
@@ -110,7 +113,7 @@ export default function SignIn() {
         onChangeText={setPassword}
       />
       <HStack marginBottom={'10px'} justifyContent={'space-between'}>
-        <Text color="white" onPress={handleNavigation}>
+        <Text color="white" onPress={navigateToRegister}>
           Cadastrar
         </Text>
         <Text color="white" onPress={handleForgotPassword}>

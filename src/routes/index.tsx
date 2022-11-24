@@ -14,6 +14,7 @@ const { Navigator, Screen, Group } = createNativeStackNavigator()
 
 export function Routes() {
   const { user } = useAuth()
+
   return (
     <NavigationContainer>
       <Navigator screenOptions={{ headerShown: false }}>
