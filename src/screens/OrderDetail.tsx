@@ -43,7 +43,7 @@ export default function OrderDetail() {
             setLoading(true)
             const orderRef = collection(db, 'Orders')
             await addDoc(orderRef, {
-              userId: user?.id,
+              userId: user?.uid,
               date: `${date}/${month}`,
               aptoUser: 'Apto 200 bl 3',
               hours: `${hours}:${min}`,
