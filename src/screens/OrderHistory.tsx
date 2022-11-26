@@ -32,7 +32,10 @@ export default function OrderHistory() {
 
   async function getMenuPizza() {
     const historyRef = collection(db, 'Orders')
-    const usersDocReference = query(historyRef, where('userId', '==', user?.id))
+    const usersDocReference = query(
+      historyRef,
+      where('userId', '==', user?.uid)
+    )
     const querySnapshot = await getDocs(usersDocReference)
     const dataProducts = querySnapshot.docs.map(doc => {
       return doc.data()

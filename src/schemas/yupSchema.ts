@@ -21,3 +21,23 @@ export const schema = yup.object({
     .matches(/^[0-9]+$/, 'Somente numeros'),
   apto: yup.string().required('Obrigatorio')
 })
+
+export const schemaUpdate = yup.object({
+  name: yup
+    .string()
+    .required('Informe um nome')
+    .min(4, 'Minimo de 4 digitos')
+    .matches(/^[aA-zZ\s]+$/, 'Somente letras é aceito'),
+
+  email: yup
+    .string()
+    .required('Informe um e-mail')
+    .email('Digite um email valido'),
+  cpf: yup
+    .string()
+    .required('Informe um cpf')
+    .min(11, 'Informe um cpf valido')
+    .max(11, 'Informe um cpf valido')
+    .matches(/^[0-9]+$/, 'Somente numeros'),
+  apto: yup.string().required('Obrigatorio')
+})

@@ -33,6 +33,7 @@ type AuthContextData = {
   loadUserStorageData: () => Promise<void>
   signOutAuth: () => Promise<void>
   forgotPassword(auth: Auth, email: string): Promise<void>
+  setUser: React.Dispatch<React.SetStateAction<User | null>>
 }
 
 type AuthProviderProps = {
@@ -151,7 +152,8 @@ function AuthProvider({ children }: AuthProviderProps) {
         isLogging,
         loadUserStorageData,
         signOutAuth,
-        forgotPassword
+        forgotPassword,
+        setUser
       }}
     >
       {children}

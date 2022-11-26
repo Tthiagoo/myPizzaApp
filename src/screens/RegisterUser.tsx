@@ -41,18 +41,23 @@ export default function RegisterUser() {
 
   const route = useRoute<RouteProp<RootStackParamList, 'RegisterUser'>>()
   const { isNewUser } = route.params
-  const { user } = useAuth()
+  const { user, setUser } = useAuth()
   const userRef = collection(db, 'Users')
   console.log('user vindo do context do register', user)
   const {
     handleSubmit,
     control,
-    formState: { errors },
-    setValue,
-    reset
+    formState: { errors }
   } = useForm<schemaTypeValidation>({
     resolver: yupResolver(schema),
-    shouldUnregister: false
+    shouldUnregister: false,
+    defaultValues: {
+      name: user?.name,
+      email: user?.email,
+      password: user?.password,
+      cpf: user?.cpf,
+      apto: user?.apto
+    }
   })
 
   type schemaTypeValidation = yup.InferType<typeof schema>
@@ -66,20 +71,40 @@ export default function RegisterUser() {
     return findBloco
   }
 
-  const handleUserRegistration = async (data: schemaTypeValidation) => {
-    const result = await getUserApto(data)
+  async function getDocId() {
+    const usersDocReference = query(userRef, where('uid', '==', user?.uid))
+    const querySnapshot = await getDocs(usersDocReference)
+    const result = querySnapshot.docs.map(doc => doc.id)
+    console.log('result', result[0])
+    return result[0]
+  }
 
-    const findCpf = result.find(({ cpf }) => cpf === data.cpf)
-    if (findCpf) {
-      Alert.alert('Cadastro', 'CPF ja cadastrado')
-      return
+  async function UpdateUser(data: schemaTypeValidation) {
+    const docId = await getDocId()
+
+    const docRef = doc(db, 'Users', docId)
+    const userData = {
+      uid: user?.uid,
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      apto: data.apto,
+      bloco: blocoUser,
+      cpf: data.cpf
     }
-
-    if (result?.length == 5) {
-      Alert.alert('Cadastro', 'Limite de 5 CPF por apartamento atingido')
-      return
+    try {
+      setLoading(true)
+      await updateDoc(docRef, userData).then(() => {
+        setLoading(false)
+        Alert.alert('Alteração', 'Alteração concluida com sucesso')
+        setUser(userData)
+      })
+    } catch (err: any) {
+      Alert.alert(err)
     }
+  }
 
+  async function AddUser(data: schemaTypeValidation) {
     try {
       setLoading(true)
       const res = await createUserWithEmailAndPassword(
@@ -92,6 +117,7 @@ export default function RegisterUser() {
         uid: user.uid,
         name: data.name,
         email: data.email,
+        password: data.password,
         apto: data.apto,
         bloco: blocoUser,
         cpf: data.cpf
@@ -102,6 +128,28 @@ export default function RegisterUser() {
     } catch (err) {
       setLoading(false)
       Alert.alert('Cadastro', 'Email já em uso')
+    }
+  }
+
+  const handleUserRegistration = async (data: schemaTypeValidation) => {
+    const result = await getUserApto(data)
+    if (!user) {
+      const findCpf = result.find(({ cpf }) => cpf === data.cpf)
+      if (findCpf) {
+        Alert.alert('Cadastro', 'CPF ja cadastrado')
+        return
+      }
+    }
+
+    if (result?.length == 5) {
+      Alert.alert('Cadastro', 'Limite de 5 CPF por apartamento atingido')
+      return
+    }
+
+    if (user) {
+      UpdateUser(data)
+    } else {
+      AddUser(data)
     }
   }
 
@@ -157,9 +205,10 @@ export default function RegisterUser() {
             render={({ field: { onChange } }) => (
               <Input
                 onChangeText={onChange}
+                defaultValue={user?.password}
                 isDisabled={user?.email ? true : false}
                 errorMessage={errors.password?.message}
-                placeholder={'**************'}
+                placeholder={'senha'}
               />
             )}
           />
@@ -230,7 +279,7 @@ export default function RegisterUser() {
               flex: 1
             }}
           >
-            <Text color={'white'}> Cadastar </Text>
+            <Text color={'white'}> {user ? 'Alterar' : 'Cadastrar'} </Text>
           </Button>
         </VStack>
       </FormControl>
