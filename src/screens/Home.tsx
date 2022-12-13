@@ -1,4 +1,4 @@
-import { Box, Button } from 'native-base'
+import { Box, Button, HStack, VStack } from 'native-base'
 import React, { useCallback, useState } from 'react'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import Search from '../components/Search'
@@ -75,19 +75,34 @@ export default function Home() {
       />
       <MenuPizza products={products} />
       {user?.isAdmin && (
-        <Button
-          bg={'red.700'}
-          onPress={handleNavigation}
-          w="80%"
-          alignSelf={'center'}
-          alignItems="center"
-          m="2"
-          h="6%"
-          borderRadius="10"
-          _pressed={{ bg: 'red.700', opacity: 0.6 }}
-        >
-          Cadastrar Produto
-        </Button>
+        <HStack h="8%" alignItems="center" justifyContent={'center'}>
+          <Button
+            bg={'red.700'}
+            onPress={handleNavigation}
+            w="40%"
+            alignSelf={'center'}
+            alignItems="center"
+            m="2"
+            h="70%"
+            borderRadius="10"
+            _pressed={{ bg: 'red.700', opacity: 0.6 }}
+          >
+            Cadastrar Produto
+          </Button>
+          <Button
+            bg={'#528F33'}
+            onPress={handleNavigation}
+            w="40%"
+            alignSelf={'center'}
+            alignItems="center"
+            m="2"
+            h="70%"
+            borderRadius="10"
+            _pressed={{ bg: 'red.700', opacity: 0.6 }}
+          >
+            Fila de Pedidos
+          </Button>
+        </HStack>
       )}
     </Box>
   )

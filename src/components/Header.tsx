@@ -42,7 +42,7 @@ export default function Header() {
                 color: 'white'
               }}
             >
-              Editar Perfil
+              Editar/Excluir Perfil
             </Badge>
           </TouchableOpacity>
         </HStack>

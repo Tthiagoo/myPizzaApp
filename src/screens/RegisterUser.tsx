@@ -10,13 +10,16 @@ import {
   VStack,
   Text,
   FormControl,
-  Select
+  Select,
+  Badge
 } from 'native-base'
 import React, { useEffect, useState } from 'react'
 import {
   signInWithEmailAndPassword,
   signOut,
-  createUserWithEmailAndPassword
+  deleteUser,
+  createUserWithEmailAndPassword,
+  getAuth
 } from 'firebase/auth'
 import { auth, db } from '../config/firebase'
 import {
@@ -28,7 +31,8 @@ import {
   updateDoc,
   where
 } from 'firebase/firestore'
-import { Alert } from 'react-native'
+
+import { Alert, TouchableOpacity } from 'react-native'
 import Input from '../components/InputForm'
 import { useForm, Controller } from 'react-hook-form'
 import { schema } from '../schemas/yupSchema'
@@ -38,10 +42,12 @@ import { useAuth } from '../context/auth'
 export default function RegisterUser() {
   const [loading, setLoading] = useState(Boolean)
   const [blocoUser, setBloco] = useState('1')
-
+  const auth = getAuth()
+  const navigation = useNavigation()
+  const userLogged = auth!.currentUser
   const route = useRoute<RouteProp<RootStackParamList, 'RegisterUser'>>()
   const { isNewUser } = route.params
-  const { user, setUser } = useAuth()
+  const { user, setUser, signOutAuth } = useAuth()
   const userRef = collection(db, 'Users')
   console.log('user vindo do context do register', user)
   const {
@@ -153,6 +159,34 @@ export default function RegisterUser() {
     }
   }
 
+  function handleDeleteUser() {
+    Alert.alert(
+      'Deseja excluir seu perfil?',
+      '',
+      [
+        {
+          text: 'OK',
+          onPress: async () => {
+            deleteUser(userLogged)
+              .then(() => {
+                Alert.alert('', 'Usuario excluido com sucesso')
+                signOutAuth()
+                navigation.navigate('login')
+              })
+              .catch(err => {
+                Alert.alert(err)
+              })
+          }
+        },
+        {
+          text: 'Cancel',
+          style: 'cancel'
+        }
+      ],
+      { cancelable: false }
+    )
+  }
+
   return (
     <Flex
       flex={1}
@@ -168,9 +202,20 @@ export default function RegisterUser() {
       alignItems="center"
       justifyContent="center"
     >
-      <Heading color="white">
-        {isNewUser ? 'Faça seu cadastro' : 'Altere seus dados'}
-      </Heading>
+      <HStack space={'3'} alignItems={'center'} justifyContent="center">
+        <Heading size={'md'} color="white">
+          {isNewUser ? 'Faça seu cadastro' : 'Altere seus dados'}
+        </Heading>
+        <TouchableOpacity onPress={handleDeleteUser}>
+          {isNewUser ? (
+            <></>
+          ) : (
+            <Badge borderRadius={'7px'} alignSelf="center" colorScheme={'red'}>
+              Excluir Perfil
+            </Badge>
+          )}
+        </TouchableOpacity>
+      </HStack>
 
       <FormControl>
         <VStack w="100%" mt="5" space={3}>

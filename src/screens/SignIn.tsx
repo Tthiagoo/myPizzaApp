@@ -36,7 +36,9 @@ export default function SignIn() {
 
   function handleSignIn() {
     signIn(email, password)
-      .then(() => {})
+      .then(() => {
+        navigation.navigate('Stack')
+      })
       .catch(error => {
         console.log(error)
       })
