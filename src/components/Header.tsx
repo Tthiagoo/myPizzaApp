@@ -12,7 +12,7 @@ export default function Header() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
   function navigateToRegister() {
-    navigation.navigate('RegisterUser', { isNewUser: false })
+    navigation.navigate('UpdateUser')
   }
   return (
     <Box

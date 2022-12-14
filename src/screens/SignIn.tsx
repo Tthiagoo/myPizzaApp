@@ -34,14 +34,10 @@ export default function SignIn() {
 
   const { signIn, isLogging, loadUserStorageData, forgotPassword } = useAuth()
 
-  function handleSignIn() {
-    signIn(email, password)
-      .then(() => {
-        navigation.navigate('Stack')
-      })
-      .catch(error => {
-        console.log(error)
-      })
+  async function handleSignIn() {
+    await signIn(email, password).catch(error => {
+      console.log(error)
+    })
   }
   function handleForgotPassword() {
     forgotPassword(auth, email)

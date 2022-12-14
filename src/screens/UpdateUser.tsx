@@ -1,4 +1,3 @@
-import { useNavigation } from '@react-navigation/native'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 
@@ -10,32 +9,54 @@ import {
   VStack,
   Text,
   FormControl,
-  Select
+  Select,
+  Badge
 } from 'native-base'
 import React, { useState } from 'react'
-import {
-  signInWithEmailAndPassword,
-  signOut,
-  createUserWithEmailAndPassword
-} from 'firebase/auth'
+import { deleteUser, getAuth } from 'firebase/auth'
 import { auth, db } from '../config/firebase'
-import { addDoc, collection, getDocs, query, where } from 'firebase/firestore'
-import { Alert } from 'react-native'
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where
+} from 'firebase/firestore'
+
+import { Alert, TouchableOpacity } from 'react-native'
 import Input from '../components/InputForm'
 import { useForm, Controller } from 'react-hook-form'
 import { schema } from '../schemas/yupSchema'
 
-export default function RegisterUser() {
+import { useAuth } from '../context/auth'
+
+export default function UpdateUser() {
   const [loading, setLoading] = useState(Boolean)
   const [blocoUser, setBloco] = useState('1')
-  const navigation = useNavigation()
-  const userRef = collection(db, 'Users')
+  const auth = getAuth()
 
+  const userLogged = auth!.currentUser
+
+  const { user, setUser, signOutAuth } = useAuth()
+
+  const userRef = collection(db, 'Users')
+  console.log('user vindo do context do register', user)
   const {
     handleSubmit,
     control,
     formState: { errors }
-  } = useForm<schemaTypeValidation>({ resolver: yupResolver(schema) })
+  } = useForm<schemaTypeValidation>({
+    resolver: yupResolver(schema),
+    shouldUnregister: false,
+    defaultValues: {
+      name: user?.name,
+      email: user?.email,
+      password: user?.password,
+      cpf: user?.cpf,
+      apto: user?.apto
+    }
+  })
 
   type schemaTypeValidation = yup.InferType<typeof schema>
 
@@ -48,49 +69,84 @@ export default function RegisterUser() {
     return findBloco
   }
 
-  const handleUserRegistration = async (data: schemaTypeValidation) => {
-    const result = await getUserApto(data)
+  async function getDocId() {
+    const usersDocReference = query(userRef, where('uid', '==', user?.uid))
+    const querySnapshot = await getDocs(usersDocReference)
+    const result = querySnapshot.docs.map(doc => doc.id)
+    console.log('result', result[0])
+    return result[0]
+  }
 
-    const findCpf = result.find(({ cpf }) => cpf === data.cpf)
-    if (findCpf) {
-      console.log(data.cpf)
-      console.log('findCpf')
-      console.log(findCpf)
-      Alert.alert('Cadastro', 'CPF ja cadastrado')
-      return
-    }
+  async function UpdateUser(data: schemaTypeValidation) {
+    const docId = await getDocId()
 
-    if (result?.length == 5) {
-      console.log(result?.length)
-      console.log(result)
-      Alert.alert('Cadastro', 'Limite de 5 CPF por apartamento atingido')
-      return
+    const docRef = doc(db, 'Users', docId)
+    const userData = {
+      uid: user?.uid,
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      apto: data.apto,
+      bloco: blocoUser,
+      cpf: data.cpf
     }
     try {
       setLoading(true)
-      const res = await createUserWithEmailAndPassword(
-        auth,
-        data.email,
-        data.password
-      )
-      const user = res.user
-      await addDoc(userRef, {
-        uid: user.uid,
-        name: data.name,
-        email: data.email,
-        apto: data.apto,
-        bloco: blocoUser,
-        cpf: data.cpf,
-        password: data.password
-      }).then(() => {
+      await updateDoc(docRef, userData).then(() => {
         setLoading(false)
-        Alert.alert('Cadastro', 'Cadastro concluido com sucesso')
+        Alert.alert('Alteração', 'Alteração concluida com sucesso')
+        setUser(userData)
       })
-    } catch (err) {
-      setLoading(false)
-      Alert.alert('Cadastro', 'Email já em uso')
+    } catch (err: any) {
+      Alert.alert(err)
     }
   }
+
+  const handleUserRegistration = async (data: schemaTypeValidation) => {
+    const result = await getUserApto(data)
+    if (!user) {
+      const findCpf = result.find(({ cpf }) => cpf === data.cpf)
+      if (findCpf) {
+        Alert.alert('Cadastro', 'CPF ja cadastrado')
+        return
+      }
+    }
+
+    if (result?.length == 5) {
+      Alert.alert('Cadastro', 'Limite de 5 CPF por apartamento atingido')
+      return
+    }
+
+    UpdateUser(data)
+  }
+
+  function handleDeleteUser() {
+    Alert.alert(
+      'Deseja excluir seu perfil?',
+      '',
+      [
+        {
+          text: 'OK',
+          onPress: async () => {
+            await deleteUser(userLogged)
+              .then(() => {
+                Alert.alert('', 'Usuario excluido com sucesso')
+                signOutAuth()
+              })
+              .catch(err => {
+                Alert.alert(err)
+              })
+          }
+        },
+        {
+          text: 'Cancel',
+          style: 'cancel'
+        }
+      ],
+      { cancelable: false }
+    )
+  }
+
   return (
     <Flex
       flex={1}
@@ -106,7 +162,16 @@ export default function RegisterUser() {
       alignItems="center"
       justifyContent="center"
     >
-      <Heading color="white">Faça seu cadastro</Heading>
+      <HStack space={'3'} alignItems={'center'} justifyContent="center">
+        <Heading size={'md'} color="white">
+          {'Altere seus dados'}
+        </Heading>
+        <TouchableOpacity onPress={handleDeleteUser}>
+          <Badge borderRadius={'7px'} alignSelf="center" colorScheme={'red'}>
+            Excluir Perfil
+          </Badge>
+        </TouchableOpacity>
+      </HStack>
 
       <FormControl>
         <VStack w="100%" mt="5" space={3}>
@@ -115,6 +180,7 @@ export default function RegisterUser() {
             name="name"
             render={({ field: { onChange } }) => (
               <Input
+                defaultValue={user?.name}
                 onChangeText={onChange}
                 errorMessage={errors.name?.message}
                 placeholder="Nome"
@@ -127,6 +193,8 @@ export default function RegisterUser() {
             render={({ field: { onChange } }) => (
               <Input
                 onChangeText={onChange}
+                isDisabled={true}
+                defaultValue={user?.email}
                 errorMessage={errors.email?.message}
                 placeholder="E-mail"
               />
@@ -138,8 +206,10 @@ export default function RegisterUser() {
             render={({ field: { onChange } }) => (
               <Input
                 onChangeText={onChange}
+                defaultValue={user?.password}
+                isDisabled={true}
                 errorMessage={errors.password?.message}
-                placeholder="Senha"
+                placeholder={'senha'}
               />
             )}
           />
@@ -150,6 +220,7 @@ export default function RegisterUser() {
               <Input
                 keyboardType="numeric"
                 onChangeText={onChange}
+                defaultValue={user?.cpf}
                 errorMessage={errors.cpf?.message}
                 placeholder="CPF"
               />
@@ -162,7 +233,9 @@ export default function RegisterUser() {
               name="apto"
               render={({ field: { onChange } }) => (
                 <Input
+                  keyboardType="numeric"
                   onChangeText={onChange}
+                  defaultValue={user?.apto}
                   errorMessage={errors.apto?.message}
                   w="50%"
                   placeholder="APTO"
@@ -177,6 +250,7 @@ export default function RegisterUser() {
               borderColor="light.100"
               size="md"
               color="white"
+              defaultValue={user?.bloco}
               w="140px"
               _selectedItem={{
                 bg: 'green.200'
@@ -206,7 +280,7 @@ export default function RegisterUser() {
               flex: 1
             }}
           >
-            <Text color={'white'}> Cadastar </Text>
+            <Text color={'white'}> {'Alterar'} </Text>
           </Button>
         </VStack>
       </FormControl>

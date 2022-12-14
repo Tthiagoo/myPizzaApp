@@ -9,6 +9,8 @@ import OrderDetail from '../screens/OrderDetail'
 import { useAuth } from '../context/auth'
 import { UserStackRoutes } from './stackRoutes'
 import RegisterUser from '../screens/RegisterUser'
+import { getAuth } from 'firebase/auth'
+import UpdateUser from '../screens/UpdateUser'
 
 const { Navigator, Screen, Group } = createNativeStackNavigator()
 
@@ -20,9 +22,8 @@ export function Routes() {
       <Navigator screenOptions={{ headerShown: false }}>
         {user ? (
           <Group>
-            <Screen name="login" component={SignIn} />
             <Screen name="Stack" component={UserStackRoutes} />
-            <Screen name="RegisterUser" component={RegisterUser} />
+            <Screen name="UpdateUser" component={UpdateUser} />
           </Group>
         ) : (
           <Group>
