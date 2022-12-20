@@ -13,6 +13,7 @@ type Props = TouchableOpacityProps & {
 }
 
 export default function ItemPizza({ data, ...rest }: Props) {
+  console.log(data)
   return (
     <TouchableOpacity {...rest}>
       <HStack fontFamily={'heading'} h="auto">
@@ -31,6 +32,17 @@ export default function ItemPizza({ data, ...rest }: Props) {
           </Heading>
           <Text lineHeight={'20px'} numberOfLines={10} fontSize={14}>
             {data.description}
+          </Text>
+          <Text
+            mt="5px"
+            lineHeight={'20px'}
+            numberOfLines={10}
+            fontSize={14}
+            fontWeight="bold"
+          >
+            {data.uniquePrice
+              ? `R$:${data.uniquePrice},00`
+              : `R$:${data.prices_sizes?.p},00 ~ ${data.prices_sizes?.g},00`}
           </Text>
         </VStack>
       </HStack>

@@ -17,4 +17,5 @@ export interface ProductProps {
   uniquePrice?: number
   typeProduct?: string
   nameHalfPizza?: string
+  observacao?: string
 }

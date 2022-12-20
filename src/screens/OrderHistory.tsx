@@ -16,6 +16,7 @@ import { useAuth } from '../context/auth'
 import { ProductProps } from '../types/orderProps'
 
 export interface HistoryProps {
+  userName: string
   id: string
   aptoUser: string
   date: string
@@ -36,7 +37,10 @@ export default function OrderHistory() {
       historyRef,
       where('userId', '==', user?.uid)
     )
-    const querySnapshot = await getDocs(usersDocReference)
+    const historyDocReference = query(historyRef)
+    const querySnapshot = user?.isAdmin
+      ? await getDocs(historyDocReference)
+      : await getDocs(usersDocReference)
     const dataProducts = querySnapshot.docs.map(doc => {
       return doc.data()
     }) as HistoryProps[]
@@ -46,7 +50,9 @@ export default function OrderHistory() {
 
   useFocusEffect(
     useCallback(() => {
-      getMenuPizza()
+      getMenuPizza().then(() => {
+        console.log(history)
+      })
     }, [])
   )
   return (

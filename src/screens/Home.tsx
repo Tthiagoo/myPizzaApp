@@ -34,6 +34,9 @@ export default function Home() {
   function handleNavigation() {
     navigation.navigate('RegisterPizza', { isAdd: true })
   }
+  function handleNavigationOrder() {
+    navigation.navigate('orders', { isAdd: true })
+  }
 
   async function getMenuPizza(value: string) {
     const formattedValue = value.toLocaleLowerCase().trim()
@@ -91,7 +94,7 @@ export default function Home() {
           </Button>
           <Button
             bg={'#528F33'}
-            onPress={handleNavigation}
+            onPress={handleNavigationOrder}
             w="40%"
             alignSelf={'center'}
             alignItems="center"

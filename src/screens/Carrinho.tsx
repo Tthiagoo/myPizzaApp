@@ -30,22 +30,24 @@ export default function Carrinho() {
 
     return total
   }, [data])
-
+  const newDate = new Date()
   const date = new Date().getDate()
 
   const month = new Date().getMonth() + 1
 
   const hours = new Date().getHours() //Current Hours
   const min = new Date().getMinutes()
+  const newMin = (newDate.getMinutes() < 10 ? '0' : '') + newDate.getMinutes()
 
   async function handleAddOrder() {
     setLoading(true)
     const orderRef = collection(db, 'Orders')
     await addDoc(orderRef, {
+      userName: user?.name,
       userId: user?.uid,
       date: `${date}/${month}`,
       aptoUser: 'Apto 200 bl 3',
-      hours: `${hours}:${min}`,
+      hours: `${hours}:${newMin}`,
       status: 'Aguardando',
       order: data,
       priceTotal: cartTotal

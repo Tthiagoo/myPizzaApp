@@ -3,6 +3,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { Badge, Box, Flex, Heading, Image, Text } from 'native-base'
 import React from 'react'
 import { TouchableOpacityProps, TouchableOpacity } from 'react-native'
+import { useAuth } from '../context/auth'
 import { HistoryProps } from '../screens/OrderHistory'
 import { ProductProps } from '../types/orderProps'
 import { RootStackParamList } from '../types/StackRoutesParams'
@@ -30,7 +31,7 @@ export default function OrderCard({
   function handleOpen() {
     navigation.navigate('orderDetail', { itemList, priceTotal })
   }
-
+  const { user } = useAuth()
   return (
     <TouchableOpacity
       style={lenghtArrayHistory === 1 ? { width: '100%' } : { width: '50%' }}
@@ -40,7 +41,7 @@ export default function OrderCard({
         flexDirection={'column'}
         alignItems="center"
         w="100%"
-        p="15px"
+        p="7px"
         justifyContent={'center'}
         borderRightColor="gray.300"
         borderRightWidth={index % 2 > 0 ? 0 : '1px'}
@@ -54,9 +55,15 @@ export default function OrderCard({
           alt="pizza"
         />
         <Heading color="#572D31" mt="4" size={'md'}>
-          {data.date} - {data.hours}
+          {user?.isAdmin
+            ? `${data.userName} | R$ ${data.priceTotal}`
+            : `${data.date} - ${data.hours}`}
         </Heading>
-        <Text>R$ {data.priceTotal}</Text>
+        <Text mt="2">
+          {user?.isAdmin
+            ? `${data.aptoUser} | ${data.date} | ${data.hours}`
+            : `R$ ${data.priceTotal}`}
+        </Text>
         <Badge
           mt="2"
           bg="#528F33"

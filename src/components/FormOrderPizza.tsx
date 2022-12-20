@@ -10,7 +10,8 @@ import {
   CheckIcon,
   Text,
   Radio,
-  Pressable
+  Pressable,
+  TextArea
 } from 'native-base'
 import React, { useEffect, useState } from 'react'
 import { Alert, TouchableOpacity } from 'react-native'
@@ -38,6 +39,7 @@ export default function FormOrderPizza() {
   const [size, setSize] = useState('')
   const [quantity, setQuantity] = useState(0)
   const [calcHalf, setCalcHalf] = useState(0)
+  const [obs, setObs] = useState('')
   const [pizza, setPizza] = useState<PizzaResponse>({} as PizzaResponse)
   const { name, photo_url, id, description, typeProduct } = route.params
 
@@ -91,6 +93,7 @@ export default function FormOrderPizza() {
   }
 
   function handleAddToCart(item: ProductProps): void {
+    console.log(item)
     if (typeProduct === 'Pizza' && !size) {
       return Alert.alert('Pedido', 'Selecione o tamanho da pizza.')
     }
@@ -110,7 +113,8 @@ export default function FormOrderPizza() {
     quantidade: quantity,
     price: calcPriceSize(),
     description,
-    uniquePrice: calcHalf
+    uniquePrice: calcHalf,
+    observacao: obs
   }
 
   useEffect(() => {
@@ -216,7 +220,28 @@ export default function FormOrderPizza() {
             </Flex>
           )}
         </HStack>
-        <Text mt="5">Total: R$ {calcPriceAmout()}</Text>
+        <Flex w="100%">
+          <FormControl.Label>
+            <Text>Observação</Text>
+          </FormControl.Label>
+          <TextArea
+            borderRadius={'10px'}
+            bg="white"
+            variant={'unstyled'}
+            borderColor="gray.300"
+            borderWidth={'1'}
+            p="0.7rem"
+            fontSize={'md'}
+            focusOutlineColor="red"
+            w="100%"
+            onChangeText={value => setObs(value)}
+            _focus={{ backgroundColor: '#fff' }}
+            autoCompleteType={undefined}
+          />
+        </Flex>
+        <Text mt="5" fontSize={'md'} fontWeight={'bold'}>
+          Total: R$ {calcPriceAmout()}
+        </Text>
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => {
@@ -231,7 +256,8 @@ export default function FormOrderPizza() {
             backgroundColor: '#528F33',
             flex: 1,
             marginTop: 14,
-            padding: 10
+            padding: 10,
+            marginBottom: 40
           }}
         >
           <Text color={'white'}> Adicionar no Carrinho </Text>

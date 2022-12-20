@@ -9,6 +9,7 @@ import PizzaOrder from '../screens/Order'
 import OrderDetail from '../screens/OrderDetail'
 import RegisterPizza from '../screens/RegisterPizza'
 import RegisterUser from '../screens/RegisterUser'
+import OrderHistory from '../screens/OrderHistory'
 
 const { Navigator, Screen, Group } = createNativeStackNavigator()
 
@@ -21,8 +22,9 @@ export function UserStackRoutes() {
         <Group>
           <Screen name="home" component={Home} />
           <Screen name="RegisterPizza" component={RegisterPizza} />
-
           <Screen name="order" component={PizzaOrder} />
+          <Screen name="orders" component={OrderHistory} />
+          <Screen name="orderDetail" component={OrderDetail} />
         </Group>
       ) : (
         <Group>

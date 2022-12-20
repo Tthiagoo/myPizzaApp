@@ -28,7 +28,7 @@ interface Props {
 }
 export default function CartItem({ index, data, ...rest }: Props) {
   const { increment, decrement, data: products, remove } = useCart()
-
+  console.log(data)
   function handleIncrement(id: string): void {
     increment(id)
     console.log(products)
@@ -93,6 +93,13 @@ export default function CartItem({ index, data, ...rest }: Props) {
         <VStack w="60%" space={1}>
           <Heading size="sm">{data.name}</Heading>
           <Text color="gray.500">{data.description}</Text>
+          {data.observacao && (
+            <Text mt="0.3rem" color="gray.500">
+              <Text fontWeight={'bold'}>Obervação: </Text>
+              {data.observacao}
+            </Text>
+          )}
+
           <HStack space={'5'}>
             <Text fontWeight={'bold'}>{`R$ ${
               data.price * data.quantidade

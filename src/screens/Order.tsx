@@ -49,7 +49,7 @@ export default function PizzaOrder() {
           source={{ uri: photo_url }}
           alignSelf="center"
         />
-        <FormControl px="20px" top="-85px" h="330">
+        <FormControl px="20px" top="-85px" h="420">
           <Heading alignSelf={'center'} mb="25px">
             {name}
           </Heading>
