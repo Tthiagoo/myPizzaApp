@@ -35,7 +35,7 @@ export default function UpdateUser() {
   const [loading, setLoading] = useState(Boolean)
   const [blocoUser, setBloco] = useState('1')
   const auth = getAuth()
-
+  console.log(auth, 'auth')
   const userLogged = auth!.currentUser
 
   const { user, setUser, signOutAuth } = useAuth()
@@ -134,7 +134,7 @@ export default function UpdateUser() {
                 signOutAuth()
               })
               .catch(err => {
-                Alert.alert(err)
+                Alert.alert(err.message)
               })
           }
         },
@@ -146,7 +146,7 @@ export default function UpdateUser() {
       { cancelable: false }
     )
   }
-
+  console.log('userlogged', userLogged)
   return (
     <Flex
       flex={1}
