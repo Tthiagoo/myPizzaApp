@@ -73,7 +73,7 @@ export default function UpdateUser() {
     const usersDocReference = query(userRef, where('uid', '==', user?.uid))
     const querySnapshot = await getDocs(usersDocReference)
     const result = querySnapshot.docs.map(doc => doc.id)
-    console.log('result', result[0])
+
     return result[0]
   }
 

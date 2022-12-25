@@ -5,14 +5,12 @@ const USER_COLLECTION = '@gopizza:users'
 
 export const getCartStorage: GetCartStorage = async () => {
   const data = await AsyncStorage.getItem(USER_COLLECTION)
-  console.log('data')
-  console.log(data)
+
   if (!data) {
     return []
   }
-  console.log('get cart storage')
+
   const plants = JSON.parse(data) as OrderProps[]
-  console.log(plants)
 
   return plants
 }

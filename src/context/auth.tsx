@@ -58,9 +58,7 @@ function AuthProvider({ children }: AuthProviderProps) {
       setUser(loggedUser)
 
       console.log('dados vindo do context', loggedUser)
-      console.log('loggedd')
 
-      console.log(user)
       await AsyncStorage.setItem(USER_COLLECTION, JSON.stringify(loggedUser))
       console.log('colocou o user no storage ')
     })

@@ -8,8 +8,6 @@ export const saveCart: SaveProductsCart = async (Product: OrderProps) => {
     const olCart = await getCartStorage()
 
     await saveCartStorage(...olCart, Product)
-    console.log('oldCart')
-    console.log(olCart)
   } catch {
     console.log('nao deu certo save cart')
   }

@@ -32,7 +32,8 @@ export default function SignIn() {
     navigation.navigate('RegisterUser', { isNewUser: true })
   }
 
-  const { signIn, isLogging, loadUserStorageData, forgotPassword } = useAuth()
+  const { signIn, isLogging, loadUserStorageData, forgotPassword, user } =
+    useAuth()
 
   async function handleSignIn() {
     await signIn(email, password).catch(error => {
@@ -42,10 +43,6 @@ export default function SignIn() {
   function handleForgotPassword() {
     forgotPassword(auth, email)
   }
-
-  useEffect(() => {
-    loadUserStorageData()
-  }, [])
 
   return (
     <Box

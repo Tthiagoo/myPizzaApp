@@ -28,10 +28,9 @@ interface Props {
 }
 export default function CartItem({ index, data, ...rest }: Props) {
   const { increment, decrement, data: products, remove } = useCart()
-  console.log(data)
+
   function handleIncrement(id: string): void {
     increment(id)
-    console.log(products)
   }
 
   function handleDecrement(id: string): void {

@@ -13,7 +13,6 @@ type Props = TouchableOpacityProps & {
 }
 
 export default function ItemPizza({ data, ...rest }: Props) {
-  console.log(data)
   return (
     <TouchableOpacity {...rest}>
       <HStack fontFamily={'heading'} h="auto">

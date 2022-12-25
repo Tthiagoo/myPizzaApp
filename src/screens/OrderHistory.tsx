@@ -1,4 +1,5 @@
 import { useFocusEffect } from '@react-navigation/native'
+
 import {
   collection,
   query,
@@ -42,6 +43,7 @@ export default function OrderHistory() {
       ? await getDocs(historyDocReference)
       : await getDocs(usersDocReference)
     const dataProducts = querySnapshot.docs.map(doc => {
+      console.log(doc.id)
       return doc.data()
     }) as HistoryProps[]
 
@@ -74,6 +76,7 @@ export default function OrderHistory() {
         data={history}
         renderItem={({ item, index }) => (
           <OrderCard
+            id={item.id}
             index={index}
             data={item}
             dataOrderDetail={item.order[0]}

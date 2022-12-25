@@ -16,11 +16,15 @@ const { Navigator, Screen, Group } = createNativeStackNavigator()
 
 export function Routes() {
   const { user } = useAuth()
+  const auth = getAuth()
 
+  const userLogged = auth!.currentUser
+  console.log('user logged', userLogged)
+  console.log('user', user)
   return (
     <NavigationContainer>
       <Navigator screenOptions={{ headerShown: false }}>
-        {user ? (
+        {user && userLogged ? (
           <Group>
             <Screen name="Stack" component={UserStackRoutes} />
             <Screen name="UpdateUser" component={UpdateUser} />

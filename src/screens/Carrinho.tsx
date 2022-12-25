@@ -1,5 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
+
 import { addDoc, collection } from 'firebase/firestore'
+import uuid from 'react-native-uuid'
 import {
   Box,
   Button,
@@ -43,12 +45,13 @@ export default function Carrinho() {
     setLoading(true)
     const orderRef = collection(db, 'Orders')
     await addDoc(orderRef, {
+      id: uuid.v4(),
       userName: user?.name,
       userId: user?.uid,
       date: `${date}/${month}`,
       aptoUser: 'Apto 200 bl 3',
       hours: `${hours}:${newMin}`,
-      status: 'Aguardando',
+      status: 'Preparando',
       order: data,
       priceTotal: cartTotal
     })

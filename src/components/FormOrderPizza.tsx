@@ -93,7 +93,6 @@ export default function FormOrderPizza() {
   }
 
   function handleAddToCart(item: ProductProps): void {
-    console.log(item)
     if (typeProduct === 'Pizza' && !size) {
       return Alert.alert('Pedido', 'Selecione o tamanho da pizza.')
     }

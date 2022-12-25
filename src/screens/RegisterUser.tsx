@@ -53,16 +53,13 @@ export default function RegisterUser() {
 
     const findCpf = result.find(({ cpf }) => cpf === data.cpf)
     if (findCpf) {
-      console.log(data.cpf)
-      console.log('findCpf')
-      console.log(findCpf)
+     
       Alert.alert('Cadastro', 'CPF ja cadastrado')
       return
     }
 
     if (result?.length == 5) {
-      console.log(result?.length)
-      console.log(result)
+   
       Alert.alert('Cadastro', 'Limite de 5 CPF por apartamento atingido')
       return
     }
