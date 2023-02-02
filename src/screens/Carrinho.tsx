@@ -40,7 +40,9 @@ export default function Carrinho() {
   const hours = new Date().getHours() //Current Hours
   const min = new Date().getMinutes()
   const newMin = (newDate.getMinutes() < 10 ? '0' : '') + newDate.getMinutes()
-
+  const newHour = (newDate.getHours() < 10 ? '0' : '') + newDate.getHours()
+  console.log(user?.apto || user?.bloco)
+  console.log('teste user')
   async function handleAddOrder() {
     setLoading(true)
     const orderRef = collection(db, 'Orders')
@@ -49,8 +51,8 @@ export default function Carrinho() {
       userName: user?.name,
       userId: user?.uid,
       date: `${date}/${month}`,
-      aptoUser: 'Apto 200 bl 3',
-      hours: `${hours}:${newMin}`,
+      aptoUser: `Apto ${user?.apto} bl ${user?.bloco}`,
+      hours: `${newHour}:${newMin}`,
       status: 'Preparando',
       order: data,
       priceTotal: cartTotal

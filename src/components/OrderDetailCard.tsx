@@ -18,7 +18,14 @@ export default function OrderDetailCard({ index, data, ...rest }: Props) {
           <Text fontWeight={'bold'}>R$ {data.price}</Text>
           <Text>Quantidade: {data.quantidade}</Text>
         </HStack>
+        {data.observacao && (
+          <Text mt="0.3rem" color="gray.500">
+            <Text fontWeight={'bold'}>Obervação: </Text>
+            {data.observacao}
+          </Text>
+        )}
       </VStack>
+
       <Image
         source={{
           uri: `${data.photo_url}`

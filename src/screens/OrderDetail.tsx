@@ -1,4 +1,5 @@
 import { useRoute, RouteProp } from '@react-navigation/native'
+import uuid from 'react-native-uuid'
 import { collection, addDoc } from 'firebase/firestore'
 import {
   Box,
@@ -43,11 +44,13 @@ export default function OrderDetail() {
             setLoading(true)
             const orderRef = collection(db, 'Orders')
             await addDoc(orderRef, {
+              id: uuid.v4(),
               userId: user?.uid,
+              userName: user?.name,
               date: `${date}/${month}`,
-              aptoUser: 'Apto 200 bl 3',
+              aptoUser: `Apto ${user?.apto} bl ${user?.bloco}`,
               hours: `${hours}:${min}`,
-              status: 'Aguardando',
+              status: 'Preparando',
               order: route.params.itemList,
               priceTotal: route.params.priceTotal
             })
@@ -104,23 +107,25 @@ export default function OrderDetail() {
         flexDirection="row"
       >
         <Heading size="sm">Total: R${route.params.priceTotal}</Heading>
-        <Button
-          isLoading={loading}
-          isLoadingText="Refazendo Pedido"
-          onPress={handleAddOrder}
-          _pressed={{ opacity: 0.6 }}
-          w="auto"
-          style={{
-            borderRadius: 12,
-            maxHeight: 50,
-            minHeight: 50,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#528F33'
-          }}
-        >
-          <Text color={'white'}> Refazer Pedido </Text>
-        </Button>
+        {!user?.isAdmin && (
+          <Button
+            isLoading={loading}
+            isLoadingText="Refazendo Pedido"
+            onPress={handleAddOrder}
+            _pressed={{ opacity: 0.6 }}
+            w="auto"
+            style={{
+              borderRadius: 12,
+              maxHeight: 50,
+              minHeight: 50,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: '#528F33'
+            }}
+          >
+            <Text color={'white'}> Refazer Pedido </Text>
+          </Button>
+        )}
       </Flex>
     </Flex>
   )

@@ -31,8 +31,9 @@ export const schemaUpdate = yup.object({
 
   email: yup
     .string()
-    .required('Informe um e-mail')
+
     .email('Digite um email valido'),
+
   cpf: yup
     .string()
     .required('Informe um cpf')

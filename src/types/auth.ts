@@ -1,8 +1,8 @@
 export interface User {
   uid?: string
   name: string
-  email: string
-  password: string
+  email?: string
+  password?: string
   isAdmin?: boolean
   cpf: string
   apto: string

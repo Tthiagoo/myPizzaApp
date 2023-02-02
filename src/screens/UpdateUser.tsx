@@ -27,7 +27,7 @@ import {
 import { Alert, TouchableOpacity } from 'react-native'
 import Input from '../components/InputForm'
 import { useForm, Controller } from 'react-hook-form'
-import { schema } from '../schemas/yupSchema'
+import { schema, schemaUpdate } from '../schemas/yupSchema'
 
 import { useAuth } from '../context/auth'
 
@@ -39,7 +39,7 @@ export default function UpdateUser() {
   const userLogged = auth!.currentUser
 
   const { user, setUser, signOutAuth } = useAuth()
-
+  console.log('passssssssssssssssssssssssssssssss', user?.password)
   const userRef = collection(db, 'Users')
   console.log('user vindo do context do register', user)
   const {
@@ -47,18 +47,18 @@ export default function UpdateUser() {
     control,
     formState: { errors }
   } = useForm<schemaTypeValidation>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(schemaUpdate),
     shouldUnregister: false,
     defaultValues: {
       name: user?.name,
       email: user?.email,
-      password: user?.password,
+
       cpf: user?.cpf,
       apto: user?.apto
     }
   })
 
-  type schemaTypeValidation = yup.InferType<typeof schema>
+  type schemaTypeValidation = yup.InferType<typeof schemaUpdate>
 
   async function getUserApto(data: schemaTypeValidation) {
     const usersDocReference = query(userRef, where('apto', '==', data.apto))
@@ -85,7 +85,7 @@ export default function UpdateUser() {
       uid: user?.uid,
       name: data.name,
       email: data.email,
-      password: data.password,
+
       apto: data.apto,
       bloco: blocoUser,
       cpf: data.cpf
@@ -200,19 +200,13 @@ export default function UpdateUser() {
               />
             )}
           />
-          <Controller
-            control={control}
-            name="password"
-            render={({ field: { onChange } }) => (
-              <Input
-                onChangeText={onChange}
-                defaultValue={user?.password}
-                isDisabled={true}
-                errorMessage={errors.password?.message}
-                placeholder={'senha'}
-              />
-            )}
+
+          <Input
+            isDisabled={true}
+            errorMessage={errors.password?.message}
+            placeholder={'Senha'}
           />
+
           <Controller
             control={control}
             name="cpf"

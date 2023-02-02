@@ -48,13 +48,14 @@ export default function RegisterPizza() {
     name: title,
     description: detalhes,
     prices_sizes,
-    uniquePrice: priceUnique
+    uniquePrice: priceUnique,
+    typeProduct: TypeProduct
   } = route.params
 
   const [image, setImage] = useState('')
 
   const [name, setName] = useState('')
-  const [typeProduct, setTypeProduct] = useState('Pizza')
+  const [typeProduct, setTypeProduct] = useState('')
   const [description, setDescription] = useState('')
   const [priceSizeP, setPriceSizeP] = useState('')
   const [priceSizeM, setPriceSizeM] = useState('')
@@ -88,6 +89,7 @@ export default function RegisterPizza() {
       setPriceSizeM(prices_sizes?.m)
       setPriceSizeG(prices_sizes?.g)
       setUniquePrice(priceUnique)
+      setTypeProduct(TypeProduct)
     }
   }, [id])
 
@@ -119,16 +121,17 @@ export default function RegisterPizza() {
   }
 
   async function handleAdd() {
+    console.log(typeProduct)
     if (!name.trim()) {
-      return Alert.alert('Cadastro', 'Informe o nome da pizza.')
+      return Alert.alert('Cadastro', 'Informe o nome do produto.')
     }
 
     if (!description.trim()) {
-      return Alert.alert('Cadastro', 'Informe a descrição da pizza.')
+      return Alert.alert('Cadastro', 'Informe a descrição do produto.')
     }
 
     if (!image) {
-      return Alert.alert('Cadastro', 'Selecione a imagem da pizza.')
+      return Alert.alert('Cadastro', 'Selecione a imagem do produto.')
     }
     if (typeProduct === 'Pizza') {
       if (!priceSizeP || !priceSizeM || !priceSizeG) {
@@ -192,23 +195,25 @@ export default function RegisterPizza() {
   }
 
   async function handleUpdate() {
+    console.log(typeProduct)
     if (!name.trim()) {
-      return Alert.alert('Cadastro', 'Informe o nome da pizza.')
+      return Alert.alert('Cadastro', 'Informe o nome do produto.')
     }
 
     if (!description.trim()) {
-      return Alert.alert('Cadastro', 'Informe a descrição da pizza.')
+      return Alert.alert('Cadastro', 'Informe a descrição do produto.')
     }
 
     if (!image) {
-      return Alert.alert('Cadastro', 'Selecione a imagem da pizza.')
+      return Alert.alert('Cadastro', 'Selecione a imagem do produto.')
     }
-
-    if (!priceSizeP || !priceSizeM || !priceSizeG) {
-      return Alert.alert(
-        'Cadastro',
-        'Informe o preço de todos os tamanhos da pizza.'
-      )
+    if (typeProduct === 'Pizza') {
+      if (!priceSizeP || !priceSizeM || !priceSizeG) {
+        return Alert.alert(
+          'Cadastro',
+          'Informe o preço de todos os tamanhos da pizza.'
+        )
+      }
     }
     setIsLoading(true)
     const fileName = new Date().getTime()
@@ -240,7 +245,9 @@ export default function RegisterPizza() {
             g: priceSizeG
           },
           photo_url: photo_url,
-          photo_path: storageRef.fullPath
+          photo_path: storageRef.fullPath,
+          typeProduct,
+          uniquePrice
         })
           .then(() => {
             setIsLoading(false)
