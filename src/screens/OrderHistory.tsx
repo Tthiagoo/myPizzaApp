@@ -26,6 +26,7 @@ export interface HistoryProps {
   status: string
   userId: string
   priceTotal: number
+  payment: string
 }
 
 export default function OrderHistory() {
@@ -83,6 +84,7 @@ export default function OrderHistory() {
             itemList={item.order}
             lenghtArrayHistory={history.length}
             priceTotal={item.priceTotal}
+            payment={item.payment}
           />
         )}
         numColumns={2}

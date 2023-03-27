@@ -18,4 +18,5 @@ export interface ProductProps {
   typeProduct?: string
   nameHalfPizza?: string
   observacao?: string
+  payment?: string
 }

@@ -9,7 +9,8 @@ import {
   Flex,
   Heading,
   HStack,
-  Text
+  Text,
+  VStack
 } from 'native-base'
 import React, { useState } from 'react'
 import { Alert } from 'react-native'
@@ -52,7 +53,8 @@ export default function OrderDetail() {
               hours: `${hours}:${min}`,
               status: 'Preparando',
               order: route.params.itemList,
-              priceTotal: route.params.priceTotal
+              priceTotal: route.params.priceTotal,
+              payment: route.params.payment
             })
               .then(async () => {
                 setLoading(false)
@@ -106,7 +108,18 @@ export default function OrderDetail() {
         alignItems={'center'}
         flexDirection="row"
       >
-        <Heading size="sm">Total: R${route.params.priceTotal}</Heading>
+        {user?.isAdmin ? (
+          <HStack alignItems={'center'}>
+            <Heading size="sm">Total: R${route.params.priceTotal} - </Heading>
+            <Heading size="sm">{route.params.payment}</Heading>
+          </HStack>
+        ) : (
+          <VStack alignItems={'center'}>
+            <Heading size="sm">Total: R${route.params.priceTotal}</Heading>
+            <Heading size="sm">{route.params.payment}</Heading>
+          </VStack>
+        )}
+
         {!user?.isAdmin && (
           <Button
             isLoading={loading}

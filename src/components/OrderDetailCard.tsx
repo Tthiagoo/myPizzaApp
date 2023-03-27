@@ -6,15 +6,22 @@ import { ProductProps } from '../types/orderProps'
 interface Props {
   index: number
   data: ProductProps
+  payment?: string
 }
-export default function OrderDetailCard({ index, data, ...rest }: Props) {
+export default function OrderDetailCard({
+  index,
+  data,
+
+  ...rest
+}: Props) {
+  console.log(data)
   return (
     <HStack w="340" px="4" py="1" marginY="2" justifyContent="space-between">
       <VStack w="60%" space={1}>
         <Heading size="sm">{data.name}</Heading>
         <Text color="gray.500">{data.description}</Text>
 
-        <HStack space={4}>
+        <HStack space={3}>
           <Text fontWeight={'bold'}>R$ {data.price}</Text>
           <Text>Quantidade: {data.quantidade}</Text>
         </HStack>

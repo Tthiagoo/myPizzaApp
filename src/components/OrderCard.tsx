@@ -25,6 +25,7 @@ type Props = TouchableOpacityProps & {
   lenghtArrayHistory: number
   itemList: ProductProps[]
   priceTotal: number
+  payment: string
 }
 export default function OrderCard({
   id,
@@ -34,6 +35,7 @@ export default function OrderCard({
   lenghtArrayHistory,
   itemList,
   priceTotal,
+  payment,
   ...rest
 }: Props) {
   const { user } = useAuth()
@@ -52,7 +54,7 @@ export default function OrderCard({
   const OrderRef = collection(db, 'Orders')
 
   function handleOpen() {
-    navigation.navigate('orderDetail', { itemList, priceTotal })
+    navigation.navigate('orderDetail', { itemList, priceTotal, payment })
   }
 
   async function getDocId() {

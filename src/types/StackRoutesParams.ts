@@ -4,7 +4,7 @@ import { ProductProps } from './orderProps'
 export type RootStackParamList = {
   order: ProductProps
   RegisterPizza: { isAdd: boolean; PizzaProps: ProductProps }
-  orderDetail: { itemList: ProductProps[]; priceTotal: number }
+  orderDetail: { itemList: ProductProps[]; priceTotal: number; payment: string }
   RegisterUser: { isNewUser: boolean }
 }
 
