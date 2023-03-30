@@ -19,8 +19,7 @@ export function Routes() {
   const auth = getAuth()
 
   const userLogged = auth!.currentUser
-  console.log('user logged', userLogged)
-  console.log('user', user)
+
   return (
     <NavigationContainer>
       <Navigator screenOptions={{ headerShown: false }}>

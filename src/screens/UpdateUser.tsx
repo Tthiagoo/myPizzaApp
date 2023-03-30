@@ -35,13 +35,13 @@ export default function UpdateUser() {
   const [loading, setLoading] = useState(Boolean)
   const [blocoUser, setBloco] = useState('1')
   const auth = getAuth()
-  console.log(auth, 'auth')
+
   const userLogged = auth!.currentUser
 
   const { user, setUser, signOutAuth } = useAuth()
-  console.log('passssssssssssssssssssssssssssssss', user?.password)
+
   const userRef = collection(db, 'Users')
-  console.log('user vindo do context do register', user)
+
   const {
     handleSubmit,
     control,
@@ -146,7 +146,7 @@ export default function UpdateUser() {
       { cancelable: false }
     )
   }
-  console.log('userlogged', userLogged)
+
   return (
     <Flex
       flex={1}

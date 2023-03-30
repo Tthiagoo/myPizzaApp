@@ -9,12 +9,10 @@ import {
   ScrollView
 } from 'native-base'
 
-import React, { useState } from 'react'
-import { ImageSourcePropType, Platform, TouchableOpacity } from 'react-native'
+import React from 'react'
+import { Platform } from 'react-native'
 import FormOrderPizza from '../components/FormOrderPizza'
 
-import RadioRow from '../components/RadioRow'
-import { ProductProps } from '../types/product'
 import { RootStackParamList } from '../types/StackRoutesParams'
 
 export default function PizzaOrder() {

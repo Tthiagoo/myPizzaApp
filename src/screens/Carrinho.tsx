@@ -23,7 +23,7 @@ import { ModalPayment } from '../components/ModalPayment'
 export default function Carrinho() {
   const [loading, setLoading] = useState(Boolean)
   const [modalVisible, setModalVisible] = useState(false)
-  console.log(modalVisible, 'visble')
+
   const { data } = useCart()
 
   const cartTotal = useMemo(() => {

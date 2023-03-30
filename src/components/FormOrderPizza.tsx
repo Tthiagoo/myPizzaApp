@@ -1,6 +1,6 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native'
 import { collection, doc, getDoc } from 'firebase/firestore'
+import uuid from 'react-native-uuid'
 import {
   HStack,
   Flex,
@@ -39,9 +39,16 @@ export default function FormOrderPizza() {
   const [size, setSize] = useState('')
   const [quantity, setQuantity] = useState(0)
   const [calcHalf, setCalcHalf] = useState(0)
+  const [halfPizzaName, setHalfPizzaName] = useState('')
   const [obs, setObs] = useState('')
   const [pizza, setPizza] = useState<PizzaResponse>({} as PizzaResponse)
-  const { name, photo_url, id, description, typeProduct } = route.params
+  const {
+    name: nameParams,
+    photo_url,
+    id,
+    description,
+    typeProduct
+  } = route.params
 
   const { addToCart } = useCart()
 
@@ -51,6 +58,11 @@ export default function FormOrderPizza() {
       setPizza(response.data() as PizzaResponse)
     )
   }
+
+  const arrayHalfPizza = [
+    { name: 'Calabresa', value: '4.40' },
+    { name: 'Frango C/Queijo', value: '2.35' }
+  ]
 
   function calcPriceAmout(): number {
     if (typeProduct === 'Pizza') {
@@ -82,6 +94,15 @@ export default function FormOrderPizza() {
 
   function calcHalfPizza(price: string) {
     if (price) {
+      const selectHalfInArray = arrayHalfPizza.find(
+        (halfPizza: { name: string; value: string }) =>
+          halfPizza.value === price
+      )
+      console.log(selectHalfInArray, 'hallllf')
+      const newPizzaName = `1/2 ${nameParams} 1/2 ${selectHalfInArray?.name}`
+      setHalfPizzaName(newPizzaName)
+      console.log('new pizza name', newPizzaName)
+      console.log(price)
       setService(price)
       const removeId = price.split('.').pop()
       setCalcHalf(Number(removeId))
@@ -106,8 +127,8 @@ export default function FormOrderPizza() {
   }
 
   const NewProduct: ProductProps = {
-    id,
-    name,
+    id: halfPizzaName ? uuid.v4() : id,
+    name: halfPizzaName ? halfPizzaName : nameParams,
     photo_url,
     quantidade: quantity,
     price: calcPriceSize(),

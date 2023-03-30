@@ -14,7 +14,7 @@ export function ModalPayment({ visible, setVisible }: props) {
   const [payment, setPayment] = useState('')
   const [loading, setLoading] = useState(false)
   const { data, reseteCart } = useCart()
-  console.log(visible)
+
   const closeModal = () => {
     setVisible(false)
   }

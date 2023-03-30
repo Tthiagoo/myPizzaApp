@@ -14,7 +14,6 @@ export default function OrderDetailCard({
 
   ...rest
 }: Props) {
-  console.log(data)
   return (
     <HStack w="340" px="4" py="1" marginY="2" justifyContent="space-between">
       <VStack w="60%" space={1}>

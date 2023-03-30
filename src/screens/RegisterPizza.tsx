@@ -121,7 +121,6 @@ export default function RegisterPizza() {
   }
 
   async function handleAdd() {
-    console.log(typeProduct)
     if (!name.trim()) {
       return Alert.alert('Cadastro', 'Informe o nome do produto.')
     }
@@ -195,7 +194,6 @@ export default function RegisterPizza() {
   }
 
   async function handleUpdate() {
-    console.log(typeProduct)
     if (!name.trim()) {
       return Alert.alert('Cadastro', 'Informe o nome do produto.')
     }

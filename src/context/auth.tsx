@@ -57,10 +57,7 @@ function AuthProvider({ children }: AuthProviderProps) {
 
       setUser(loggedUser)
 
-      console.log('dados vindo do context', loggedUser)
-
       await AsyncStorage.setItem(USER_COLLECTION, JSON.stringify(loggedUser))
-      console.log('colocou o user no storage ')
     })
   }
 
@@ -74,11 +71,9 @@ function AuthProvider({ children }: AuthProviderProps) {
       .then(userCredential => {
         // Signed in
         const user = userCredential.user
-        console.log('chegou aqui')
-        console.log(user.email)
 
         setUserData(user.uid)
-        console.log(user)
+
         setIsLogging(false)
       })
 
@@ -109,8 +104,6 @@ function AuthProvider({ children }: AuthProviderProps) {
     if (storedUser) {
       const userData = JSON.parse(storedUser) as User
 
-      console.log(userData)
-      console.log('userdata do storage  ')
       setUser(userData)
     }
 
@@ -118,10 +111,8 @@ function AuthProvider({ children }: AuthProviderProps) {
   }
 
   async function signOutAuth() {
-    console.log('antes do signout')
     await signOut(auth)
 
-    console.log('depois do signout')
     await AsyncStorage.removeItem(USER_COLLECTION)
     await AsyncStorage.removeItem('@GoMarketplace:products')
     setUser(null)

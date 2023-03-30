@@ -42,7 +42,7 @@ export default function OrderCard({
   const [statusOrder, setStatusOrder] = useState(
     'Preparando' || 'Pronto' || 'Entregue'
   )
-  console.log('status do componente', data.status)
+
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
 
@@ -71,7 +71,7 @@ export default function OrderCard({
       return
     }
     const status = statusOrder === 'Preparando' ? 'Pronto' : 'Entregue'
-    console.log('status da função', status)
+
     const docId = await getDocId()
     const docRef = doc(db, 'Orders', docId)
     const userData = {
@@ -99,7 +99,6 @@ export default function OrderCard({
   }
 
   useEffect(() => {
-    console.log('status do pedido', data.status)
     setStatusOrder(data.status)
   }, [])
 

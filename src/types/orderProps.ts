@@ -1,5 +1,5 @@
 export interface ProductProps {
-  id: string
+  id: string | number[]
   idUser?: string | undefined
   name: string
   photo_url: string

@@ -44,7 +44,6 @@ export default function OrderHistory() {
       ? await getDocs(historyDocReference)
       : await getDocs(usersDocReference)
     const dataProducts = querySnapshot.docs.map(doc => {
-      console.log(doc.id)
       return doc.data()
     }) as HistoryProps[]
 

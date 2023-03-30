@@ -36,9 +36,7 @@ export default function SignIn() {
     useAuth()
 
   async function handleSignIn() {
-    await signIn(email, password).catch(error => {
-      console.log(error)
-    })
+    await signIn(email, password).catch(error => {})
   }
   function handleForgotPassword() {
     forgotPassword(auth, email)
