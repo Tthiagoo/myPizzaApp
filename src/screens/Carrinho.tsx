@@ -32,7 +32,12 @@ export default function Carrinho() {
 
       return accumulator + productSubTotal
     }, 0)
+    if (total.toString().includes('.')) {
+      const priceWith0 = parseFloat(total.toString() + '0').toFixed(2)
+      console.log('price0', priceWith0)
 
+      return priceWith0
+    }
     return total
   }, [data])
 

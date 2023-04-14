@@ -24,7 +24,11 @@ export function ModalPayment({ visible, setVisible }: props) {
 
       return accumulator + productSubTotal
     }, 0)
+    if (total.toString().includes('.')) {
+      const priceWith0 = parseFloat(total.toString() + '0').toFixed(2)
 
+      return priceWith0
+    }
     return total
   }, [data])
 
@@ -62,7 +66,7 @@ export function ModalPayment({ visible, setVisible }: props) {
       })
   }
   return (
-    <Modal isOpen={visible} onClose={closeModal} size={'xs'}>
+    <Modal isOpen={visible} onClose={closeModal} size={'md'}>
       <Modal.Content>
         <Modal.CloseButton />
         <Modal.Header>Selecione a forma de pagamento</Modal.Header>

@@ -11,7 +11,7 @@ import {
   Box,
   CloseIcon
 } from 'native-base'
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 
 import Swipeable from 'react-native-gesture-handler/Swipeable'
 import { Feather } from '@expo/vector-icons'
@@ -27,6 +27,17 @@ interface Props {
   data: ProductProps
 }
 export default function CartItem({ index, data, ...rest }: Props) {
+  function formatPrice(): string | number {
+    const price = data.price * data.quantidade
+    if (price.toString().includes('.')) {
+      const priceWith0 = parseFloat(price.toString() + '0').toFixed(2)
+      console.log('price0', priceWith0)
+
+      return priceWith0
+    }
+    return price
+  }
+
   const { increment, decrement, data: products, remove } = useCart()
 
   function handleIncrement(id: string): void {
@@ -100,9 +111,7 @@ export default function CartItem({ index, data, ...rest }: Props) {
           )}
 
           <HStack space={'5'}>
-            <Text fontWeight={'bold'}>{`R$ ${
-              data.price * data.quantidade
-            }`}</Text>
+            <Text fontWeight={'bold'}>{`R$ ${formatPrice()}`}</Text>
             <HStack space={2}>
               <TouchableOpacity onPress={() => handleDecrement(data.id)}>
                 <MinusIcon size="6" mt="0.5" color="red.500" />

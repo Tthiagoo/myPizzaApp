@@ -36,7 +36,7 @@ export default function FormOrderPizza() {
   const route = useRoute<RouteProp<RootStackParamList, 'order'>>()
   const navigation = useNavigation()
   const [service, setService] = useState('')
-  const [size, setSize] = useState('')
+  const [size, setSize] = useState('p')
   const [quantity, setQuantity] = useState(0)
   const [calcHalf, setCalcHalf] = useState(0)
   const [halfPizzaName, setHalfPizzaName] = useState('')
@@ -60,54 +60,67 @@ export default function FormOrderPizza() {
   }
 
   const arrayHalfPizza = [
-    { name: 'Calabresa', value: '4.40' },
-    { name: 'Frango C/Queijo', value: '2.35' }
+    { name: 'Calabresa e Mussarela ', value: { g: '45', p: '15', m: '30' } },
+    { name: 'Frango e Mussarela ', value: { p: '20', m: '40', g: '60' } },
+    { name: 'Portuguesa', value: { m: '40', p: '20', g: '60' } },
+    { name: 'Mussarela', value: { m: '30', g: '40', p: '20' } },
+    { name: '4 Queijos', value: { m: '50', g: '75', p: '30' } },
+    { name: 'Atum', value: { p: '35', g: '80', m: '50' } },
+    { name: 'Bauru', value: { g: '60', m: '40', p: '30' } },
+    { name: 'Hot Dog', value: { g: '80', m: '50', p: '30' } }
   ]
 
-  function calcPriceAmout(): number {
-    if (typeProduct === 'Pizza') {
+  function calcPriceAmout(): number | string {
+    if (typeProduct === 'Pizza' && size && quantity) {
       if (service) {
         const priceSize = calcHalf ? calcHalf * quantity : 0
+        if (priceSize.toString().includes('.')) {
+          const priceWith0 = parseFloat(priceSize.toString() + '0').toFixed(2)
+          console.log('price0', priceWith0)
 
-        return priceSize
+          return priceWith0
+        } else {
+          console.log('caiu aquiiiiii')
+          return priceSize
+        }
+      } else {
+        console.log('caiu no else')
+        const amount = size ? pizza.prices_sizes[size] * quantity : 0
+        return amount
       }
-      const amount = size ? pizza.prices_sizes[size] * quantity : 0
-      return amount
     } else {
       const amount = quantity * Number(pizza.uniquePrice)
       return amount
     }
   }
 
-  function calcPriceSize(): number {
-    if (typeProduct === 'Pizza') {
+  /*function calcPriceSize(): number {
+    if (typeProduct === 'Pizza' && size && quantity) {
       if (service) {
         const priceSize = calcHalf
         return priceSize
       }
+
       const priceSize = size ? pizza.prices_sizes[size] : 0
       return priceSize
     } else {
       return Number(pizza.uniquePrice)
     }
-  }
+  }*/
 
-  function calcHalfPizza(price: string) {
+  function calcHalfPizza(price: string, name: string) {
     if (price) {
-      const selectHalfInArray = arrayHalfPizza.find(
-        (halfPizza: { name: string; value: string }) =>
-          halfPizza.value === price
-      )
-      console.log(selectHalfInArray, 'hallllf')
-      const newPizzaName = `1/2 ${nameParams} 1/2 ${selectHalfInArray?.name}`
+      const newPizzaName = `1/2 ${nameParams} 1/2 ${name}`
       setHalfPizzaName(newPizzaName)
       console.log('new pizza name', newPizzaName)
       console.log(price)
-      setService(price)
-      const removeId = price.split('.').pop()
-      setCalcHalf(Number(removeId))
+      const dividePrice = pizza.prices_sizes[size] / 2 + Number(price) / 2
+      console.log(pizza.prices_sizes[size] / 2, Number(price) / 2)
+      console.log(dividePrice, 'divde')
 
-      return Number(removeId)
+      setCalcHalf(dividePrice)
+
+      return Number(price)
     }
     setService('')
     return
@@ -131,7 +144,7 @@ export default function FormOrderPizza() {
     name: halfPizzaName ? halfPizzaName : nameParams,
     photo_url,
     quantidade: quantity,
-    price: calcPriceSize(),
+    price: Number(calcPriceAmout()),
     description,
     uniquePrice: calcHalf,
     observacao: obs
@@ -170,6 +183,9 @@ export default function FormOrderPizza() {
                   borderRadius={'10px'}
                   borderColor={size == item.id ? 'green.500' : 'gray.300'}
                   onPress={() => {
+                    console.log('foii')
+                    setService('')
+                    setCalcHalf(0)
                     setSize(item.id)
                   }}
                 >
@@ -227,15 +243,23 @@ export default function FormOrderPizza() {
                 _selectedItem={{
                   bg: 'green.200'
                 }}
-                onValueChange={itemValue => calcHalfPizza(itemValue)}
               >
-                <Select.Item label="Não" value="" />
-                <Select.Item label="Bauru = R$30" value="1.30" />
-                <Select.Item label="Frango C/Queijo = R$35" value="2.35" />
-                <Select.Item label="Portuguesa = R$40" value="3.40" />
-                <Select.Item label="Calabresa = R$40" value="4.40" />
-                <Select.Item label="Mussarela = R$40" value="5.40" />
-                <Select.Item label="4 Queijos = R$40" value="6.40" />
+                <Select.Item
+                  label="Não"
+                  value=""
+                  onPress={() => setService('')}
+                />
+                {arrayHalfPizza.map((option, index) => (
+                  <Select.Item
+                    key={index}
+                    label={`${option.name} - R$ ${option.value[size]}`}
+                    value={`${index}.${option.value[size]}`}
+                    onPress={() => {
+                      setService(`${index}.${option.value[size]}`)
+                      calcHalfPizza(option.value[size], option.name)
+                    }}
+                  />
+                ))}
               </Select>
             </Flex>
           )}
@@ -260,7 +284,7 @@ export default function FormOrderPizza() {
           />
         </Flex>
         <Text mt="5" fontSize={'md'} fontWeight={'bold'}>
-          Total: R$ {calcPriceAmout()}
+          Total: R$ {size && quantity ? calcPriceAmout() : 0}
         </Text>
         <TouchableOpacity
           activeOpacity={0.7}
