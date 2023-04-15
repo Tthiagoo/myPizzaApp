@@ -61,6 +61,7 @@ export default function Home() {
   function handleSearch() {
     getMenuPizza(search)
   }
+  console.log(user)
 
   useFocusEffect(
     useCallback(() => {

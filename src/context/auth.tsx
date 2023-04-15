@@ -71,7 +71,7 @@ function AuthProvider({ children }: AuthProviderProps) {
       .then(userCredential => {
         // Signed in
         const user = userCredential.user
-
+        console.log(userCredential)
         setUserData(user.uid)
 
         setIsLogging(false)

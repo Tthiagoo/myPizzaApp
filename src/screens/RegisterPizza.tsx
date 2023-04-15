@@ -55,7 +55,7 @@ export default function RegisterPizza() {
   const [image, setImage] = useState('')
 
   const [name, setName] = useState('')
-  const [typeProduct, setTypeProduct] = useState('')
+  const [typeProduct, setTypeProduct] = useState('Pizza')
   const [description, setDescription] = useState('')
   const [priceSizeP, setPriceSizeP] = useState('')
   const [priceSizeM, setPriceSizeM] = useState('')
@@ -181,6 +181,7 @@ export default function RegisterPizza() {
             navigation.navigate('home')
           })
           .catch(function (error) {
+            setIsLoading(false)
             console.log(
               'There has been a problem with your fetch operation: ' +
                 error.message

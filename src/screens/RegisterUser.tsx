@@ -53,13 +53,11 @@ export default function RegisterUser() {
 
     const findCpf = result.find(({ cpf }) => cpf === data.cpf)
     if (findCpf) {
-     
       Alert.alert('Cadastro', 'CPF ja cadastrado')
       return
     }
 
     if (result?.length == 5) {
-   
       Alert.alert('Cadastro', 'Limite de 5 CPF por apartamento atingido')
       return
     }
@@ -84,6 +82,7 @@ export default function RegisterUser() {
         Alert.alert('Cadastro', 'Cadastro concluido com sucesso')
       })
     } catch (err) {
+      console.log(err)
       setLoading(false)
       Alert.alert('Cadastro', 'Email já em uso')
     }
