@@ -15,9 +15,7 @@ import React, { useMemo, useState } from 'react'
 
 import CartItem from '../components/CartItem'
 
-import { useAuth } from '../context/auth'
-
-import { useCart } from '../context/newCartContext'
+import { useCart } from '../store/newCartContext'
 import { ModalPayment } from '../components/ModalPayment'
 
 export default function Carrinho() {
@@ -34,7 +32,6 @@ export default function Carrinho() {
     }, 0)
     if (total.toString().includes('.')) {
       const priceWith0 = parseFloat(total.toString() + '0').toFixed(2)
-      console.log('price0', priceWith0)
 
       return priceWith0
     }

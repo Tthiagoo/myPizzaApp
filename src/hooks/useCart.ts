@@ -1,6 +1,6 @@
 import { GetCartStorage } from '../types/CartStorageTypes'
 import { SaveProductsCart } from '../types/CartContextTypes'
-import { getCartStorage, saveCartStorage } from '../storage/CartStorage'
+import { getCartStorage, saveCartStorage } from '../utils/CartStorage'
 import { OrderProps } from '../types/orderProps'
 
 export const saveCart: SaveProductsCart = async (Product: OrderProps) => {
@@ -8,7 +8,5 @@ export const saveCart: SaveProductsCart = async (Product: OrderProps) => {
     const olCart = await getCartStorage()
 
     await saveCartStorage(...olCart, Product)
-  } catch {
-    console.log('nao deu certo save cart')
-  }
+  } catch {}
 }

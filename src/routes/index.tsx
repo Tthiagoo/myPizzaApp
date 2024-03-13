@@ -1,23 +1,21 @@
 import React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import SignIn from '../screens/SignIn'
-import Home from '../screens/Home'
-import { UserTabRoutes } from './tabRoutes'
-import PizzaOrder from '../screens/Order'
-import OrderDetail from '../screens/OrderDetail'
-import { useAuth } from '../context/auth'
+import SignIn from '../modules/auth/views/SignIn'
+
 import { UserStackRoutes } from './stackRoutes'
 import RegisterUser from '../screens/RegisterUser'
 import { getAuth } from 'firebase/auth'
 import UpdateUser from '../screens/UpdateUser'
+import { useStore } from '../modules/auth/store/authStore'
 
 const { Navigator, Screen, Group } = createNativeStackNavigator()
 
 export function Routes() {
-  const { user } = useAuth()
+  const { user } = useStore()
   const auth = getAuth()
 
+  console.log(user)
   const userLogged = auth!.currentUser
 
   return (

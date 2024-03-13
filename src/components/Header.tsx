@@ -3,12 +3,12 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import { Badge, Box, Heading, HStack, Icon } from 'native-base'
 import React from 'react'
 import { TouchableOpacity } from 'react-native'
-import { useAuth } from '../context/auth'
 
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../types/StackRoutesParams'
+import { useStore } from '../modules/auth/store/authStore'
 export default function Header() {
-  const { signOutAuth, user } = useAuth()
+  const { signOutAuth, user } = useStore()
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
   function navigateToRegister() {

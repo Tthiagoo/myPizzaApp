@@ -4,10 +4,10 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { FlatList, Text } from 'native-base'
 import React from 'react'
 
-import { useAuth } from '../context/auth'
 import { ProductProps } from '../types/orderProps'
 
 import ItemPizza from './ItemPizza'
+import { useStore } from '../modules/auth/store/authStore'
 
 export type RootStackParamList = {
   order: { id: string }
@@ -20,7 +20,7 @@ interface NewProd {
 }
 
 export default function MenuPizza({ products }: NewProd) {
-  const { user } = useAuth()
+  const { user } = useStore()
 
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()

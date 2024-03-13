@@ -19,7 +19,7 @@ import { Feather } from '@expo/vector-icons'
 import { Animated, TouchableOpacity } from 'react-native'
 import { RectButton } from 'react-native-gesture-handler'
 import { ProductProps } from '../types/orderProps'
-import { useCart } from '../context/newCartContext'
+import { useCart } from '../store/newCartContext'
 import formatValue from '../utils/formatValue'
 
 interface Props {
@@ -31,7 +31,6 @@ export default function CartItem({ index, data, ...rest }: Props) {
     const price = data.price * data.quantidade
     if (price.toString().includes('.')) {
       const priceWith0 = parseFloat(price.toString() + '0').toFixed(2)
-      console.log('price0', priceWith0)
 
       return priceWith0
     }

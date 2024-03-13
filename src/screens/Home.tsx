@@ -6,7 +6,7 @@ import Header from '../components/Header'
 
 import HeaderListPizza from '../components/HeaderListPizza'
 import MenuPizza from '../components/MenuPizza'
-import { useAuth } from '../context/auth'
+
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import {
   collection,
@@ -19,6 +19,7 @@ import {
 } from 'firebase/firestore'
 import { db } from '../config/firebase'
 import { ProductProps } from '../types/orderProps'
+import { useStore } from '../modules/auth/store/authStore'
 
 export default function Home() {
   const [search, setSearch] = useState('')
@@ -27,7 +28,7 @@ export default function Home() {
   type RootStackParamList = {
     RegisterPizza: { isAdd: boolean }
   }
-  const { user } = useAuth()
+  const { user } = useStore()
 
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()

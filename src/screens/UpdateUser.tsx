@@ -29,7 +29,7 @@ import Input from '../components/InputForm'
 import { useForm, Controller } from 'react-hook-form'
 import { schema, schemaUpdate } from '../schemas/yupSchema'
 
-import { useAuth } from '../context/auth'
+import { useStore } from '../modules/auth/store/authStore'
 
 export default function UpdateUser() {
   const [loading, setLoading] = useState(Boolean)
@@ -38,7 +38,7 @@ export default function UpdateUser() {
 
   const userLogged = auth!.currentUser
 
-  const { user, setUser, signOutAuth } = useAuth()
+  const { user, setUser, signOutAuth } = useStore()
 
   const userRef = collection(db, 'Users')
 

@@ -16,8 +16,8 @@ import {
 import React, { useEffect, useState } from 'react'
 import { Alert, TouchableOpacity } from 'react-native'
 import { db } from '../config/firebase'
-import { useAuth } from '../context/auth'
-import { useCart } from '../context/newCartContext'
+
+import { useCart } from '../store/newCartContext'
 
 import { ProductProps } from '../types/orderProps'
 import { RootStackParamList } from '../types/StackRoutesParams'
@@ -76,15 +76,12 @@ export default function FormOrderPizza() {
         const priceSize = calcHalf ? calcHalf * quantity : 0
         if (priceSize.toString().includes('.')) {
           const priceWith0 = parseFloat(priceSize.toString() + '0').toFixed(2)
-          console.log('price0', priceWith0)
 
           return priceWith0
         } else {
-          console.log('caiu aquiiiiii')
           return priceSize
         }
       } else {
-        console.log('caiu no else')
         const amount = size ? pizza.prices_sizes[size] * quantity : 0
         return amount
       }
@@ -112,11 +109,8 @@ export default function FormOrderPizza() {
     if (price) {
       const newPizzaName = `1/2 ${nameParams} 1/2 ${name}`
       setHalfPizzaName(newPizzaName)
-      console.log('new pizza name', newPizzaName)
-      console.log(price)
+
       const dividePrice = pizza.prices_sizes[size] / 2 + Number(price) / 2
-      console.log(pizza.prices_sizes[size] / 2, Number(price) / 2)
-      console.log(dividePrice, 'divde')
 
       setCalcHalf(dividePrice)
 
@@ -183,7 +177,6 @@ export default function FormOrderPizza() {
                   borderRadius={'10px'}
                   borderColor={size == item.id ? 'green.500' : 'gray.300'}
                   onPress={() => {
-                    console.log('foii')
                     setService('')
                     setCalcHalf(0)
                     setSize(item.id)

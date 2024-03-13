@@ -13,8 +13,9 @@ import { Box, Divider, FlatList, Flex, Heading, Text } from 'native-base'
 import React, { useCallback, useEffect, useState } from 'react'
 import OrderCard from '../components/OrderCard'
 import { db } from '../config/firebase'
-import { useAuth } from '../context/auth'
+
 import { ProductProps } from '../types/orderProps'
+import { useStore } from '../modules/auth/store/authStore'
 
 export interface HistoryProps {
   userName: string
@@ -31,7 +32,7 @@ export interface HistoryProps {
 
 export default function OrderHistory() {
   const [history, setHistory] = useState<HistoryProps[]>([])
-  const { user } = useAuth()
+  const { user } = useStore()
 
   async function getMenuPizza() {
     const historyRef = collection(db, 'Orders')

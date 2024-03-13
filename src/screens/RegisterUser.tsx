@@ -19,7 +19,15 @@ import {
   createUserWithEmailAndPassword
 } from 'firebase/auth'
 import { auth, db } from '../config/firebase'
-import { addDoc, collection, getDocs, query, where } from 'firebase/firestore'
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  query,
+  setDoc,
+  where
+} from 'firebase/firestore'
 import { Alert } from 'react-native'
 import Input from '../components/InputForm'
 import { useForm, Controller } from 'react-hook-form'
@@ -28,7 +36,7 @@ import { schema } from '../schemas/yupSchema'
 export default function RegisterUser() {
   const [loading, setLoading] = useState(Boolean)
   const [blocoUser, setBloco] = useState('1')
-  const navigation = useNavigation()
+
   const userRef = collection(db, 'Users')
 
   const {
@@ -53,13 +61,11 @@ export default function RegisterUser() {
 
     const findCpf = result.find(({ cpf }) => cpf === data.cpf)
     if (findCpf) {
-     
       Alert.alert('Cadastro', 'CPF ja cadastrado')
       return
     }
 
     if (result?.length == 5) {
-   
       Alert.alert('Cadastro', 'Limite de 5 CPF por apartamento atingido')
       return
     }
@@ -71,7 +77,7 @@ export default function RegisterUser() {
         data.password
       )
       const user = res.user
-      await addDoc(userRef, {
+      await setDoc(doc(db, 'Users', user.uid), {
         uid: user.uid,
         name: data.name,
         email: data.email,
@@ -81,6 +87,7 @@ export default function RegisterUser() {
         password: data.password
       }).then(() => {
         setLoading(false)
+        console.log(user.uid)
         Alert.alert('Cadastro', 'Cadastro concluido com sucesso')
       })
     } catch (err) {

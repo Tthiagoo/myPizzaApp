@@ -12,7 +12,7 @@ import { Badge, Box, Flex, Heading, Image, Text } from 'native-base'
 import React, { useEffect, useState } from 'react'
 import { TouchableOpacityProps, TouchableOpacity, Alert } from 'react-native'
 import { db } from '../config/firebase'
-import { useAuth } from '../context/auth'
+
 import { HistoryProps } from '../screens/OrderHistory'
 import { ProductProps } from '../types/orderProps'
 import { RootStackParamList } from '../types/StackRoutesParams'
@@ -38,7 +38,7 @@ export default function OrderCard({
   payment,
   ...rest
 }: Props) {
-  const { user } = useAuth()
+  const { user } = useStore()
   const [statusOrder, setStatusOrder] = useState(
     'Preparando' || 'Pronto' || 'Entregue'
   )

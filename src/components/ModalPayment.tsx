@@ -3,9 +3,10 @@ import { Button, Modal, Select, Text } from 'native-base'
 import { collection, addDoc } from 'firebase/firestore'
 import { db } from '../config/firebase'
 import uuid from 'react-native-uuid'
-import { useAuth } from '../context/auth'
-import { useCart } from '../context/newCartContext'
+
+import { useCart } from '../store/newCartContext'
 import { Alert } from 'react-native'
+import { useStore } from '../modules/auth/store/authStore'
 interface props {
   visible: boolean
   setVisible: React.Dispatch<React.SetStateAction<boolean>>
@@ -32,7 +33,7 @@ export function ModalPayment({ visible, setVisible }: props) {
     return total
   }, [data])
 
-  const { user } = useAuth()
+  const { user } = useStore()
   const newDate = new Date()
   const date = new Date().getDate()
 
@@ -61,9 +62,7 @@ export function ModalPayment({ visible, setVisible }: props) {
         closeModal()
         Alert.alert('', 'Pedido concluido com sucesso')
       })
-      .catch(err => {
-        console.log(err)
-      })
+      .catch(err => {})
   }
   return (
     <Modal isOpen={visible} onClose={closeModal} size={'md'}>

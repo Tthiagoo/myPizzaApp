@@ -16,14 +16,14 @@ import React, { useState } from 'react'
 import { Alert } from 'react-native'
 import OrderDetailCard from '../components/OrderDetailCard'
 import { db } from '../config/firebase'
-import { useAuth } from '../context/auth'
-import { useCart } from '../context/newCartContext'
+
+import { useCart } from '../store/newCartContext'
 import { RootStackParamList } from '../types/StackRoutesParams'
 
 export default function OrderDetail() {
   const [loading, setLoading] = useState(Boolean)
 
-  const { user } = useAuth()
+  const { user } = useStore()
   const { reseteCart } = useCart()
   const route = useRoute<RouteProp<RootStackParamList, 'orderDetail'>>()
 

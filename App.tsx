@@ -10,8 +10,13 @@ import { Routes } from './src/routes'
 import { LinearGradient } from 'expo-linear-gradient'
 import { theme } from './src/theme/customTheme'
 import { Loading } from './src/components/Loading'
-import { AuthProvider } from './src/context/auth'
-import { CartProvider } from './src/context/newCartContext'
+import { AuthProvider } from './src/store/auth'
+import { CartProvider } from './src/store/newCartContext'
+
+const inset = {
+  frame: { x: 0, y: 0, width: 0, height: 0 },
+  insets: { top: 0, left: 0, right: 0, bottom: 0 }
+}
 
 const config = {
   dependencies: {
@@ -26,7 +31,11 @@ export default function App() {
   })
 
   return (
-    <NativeBaseProvider config={config} theme={theme}>
+    <NativeBaseProvider
+      config={config}
+      theme={theme}
+      initialWindowMetrics={inset}
+    >
       <AuthProvider>
         <CartProvider>
           <StatusBar style="light" translucent backgroundColor="transparent" />

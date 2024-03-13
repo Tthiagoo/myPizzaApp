@@ -9,20 +9,21 @@ import {
   Button
 } from 'native-base'
 import React, { useEffect, useState } from 'react'
-import ImageLogin from '../../assets/imageLogin.png'
+import ImageLogin from '../../../../assets/imageLogin.png'
 import { MaterialIcons } from '@expo/vector-icons'
 
 import { Heading } from 'native-base'
 
-import { useAuth } from '../context/auth'
+import { useAuth } from '../../../store/auth'
 
 import { useNavigation } from '@react-navigation/native'
 
-import { auth } from '../config/firebase'
+import { auth } from '../../../config/firebase'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { RootStackParamList } from '../types/StackRoutesParams'
+import { RootStackParamList } from '../../../types/StackRoutesParams'
+import { useStore } from '../store/authStore'
 export default function SignIn() {
-  const [show, setShow] = React.useState(false)
+  const [show, setShow] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
@@ -32,15 +33,9 @@ export default function SignIn() {
     navigation.navigate('RegisterUser', { isNewUser: true })
   }
 
-  const { signIn, isLogging, loadUserStorageData, forgotPassword, user } =
-    useAuth()
+  const { forgotPassword, isLogging } = useStore()
 
-  async function handleSignIn() {
-    await signIn(email, password).catch(error => {})
-  }
-  function handleForgotPassword() {
-    forgotPassword(auth, email)
-  }
+  const { signIn } = useStore()
 
   return (
     <Box
@@ -109,13 +104,20 @@ export default function SignIn() {
         <Text color="white" onPress={navigateToRegister}>
           Cadastrar
         </Text>
-        <Text color="white" onPress={handleForgotPassword}>
+        <Text
+          color="white"
+          onPress={() => {
+            forgotPassword(auth, email)
+          }}
+        >
           Esqueci Senha
         </Text>
       </HStack>
 
       <Button
-        onPress={handleSignIn}
+        onPress={() => {
+          signIn(email, password)
+        }}
         isLoading={isLogging}
         _pressed={{ opacity: 0.6 }}
         style={{
